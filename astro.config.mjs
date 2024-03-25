@@ -13,5 +13,8 @@ export default defineConfig({
       exclude: ["oslo", "astro:db"]
     }
   },
-  adapter: vercel()
+  adapter: vercel({
+    imageService: true
+  }),
+  site: "https://devsoverflow.vercel.app",
 });
