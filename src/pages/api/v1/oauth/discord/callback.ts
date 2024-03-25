@@ -15,10 +15,25 @@ interface DiscordUser {
   banner: string | null;
   accent_color: number;
   global_name: string;
-  avatar_decoration_data: any | null; // You might want to replace `any` with a more specific type if possible
+  avatar_decoration_data: any | null;
   banner_color: string;
   mfa_enabled: boolean;
   locale: string;
+}
+
+interface CustomDiscordUser extends DiscordUser {
+  avatarUrl: string;
+  accentColor: string;
+}
+
+function parseDiscordUser(user: DiscordUser):CustomDiscordUser {
+  return {
+    ...user,
+    avatarUrl: user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
+      : `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`,
+    accentColor: '#' + user.accent_color.toString(16).padStart(6, '0')
+  };
 }
 
 export async function GET(context: APIContext): Promise<Response> {
@@ -38,30 +53,28 @@ export async function GET(context: APIContext): Promise<Response> {
         Authorization: `Bearer ${tokens.accessToken}`
       }
     });
-    const discordUser = (await discordUserResponse.json()) as DiscordUser;
 
-    // Replace this with your own DB client.
-    // const existingUser = await db.table("user").where("github_id", "=", githubUser.id).get();
-    const existingUser = await db.select().from(User).where(eq(User.discord_id, discordUser.id)).get();
+    const discordUser = parseDiscordUser(await discordUserResponse.json());
+    const dbUser = await db.select().from(User).where(eq(User.discord_id, discordUser.id)).get();
 
-    if (existingUser) {
-      const session = await lucia.createSession(existingUser.id, {});
+    if (dbUser) {
+      const session = await lucia.createSession(dbUser.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
       if (
-        discordUser.global_name !== existingUser.name ||
-        discordUser.avatar !== existingUser.avatar ||
-        discordUser.accent_color !== parseInt(existingUser.accent_color.slice(1), 16)
+        discordUser.global_name !== dbUser.name ||
+        discordUser.avatarUrl !== dbUser.avatar ||
+        discordUser.accentColor !== dbUser.accent_color
       ) {
         await db
           .update(User)
           .set({
             name: discordUser.global_name,
-            avatar: discordUser.avatar,
-            accent_color: '#' + discordUser.accent_color.toString(16).padStart(6, '0')
+            avatar: discordUser.avatarUrl,
+            accent_color: discordUser.accentColor
           })
-          .where(eq(User.id, existingUser.id));
+          .where(eq(User.id, dbUser.id));
       }
 
       return context.redirect('/');
@@ -69,16 +82,12 @@ export async function GET(context: APIContext): Promise<Response> {
 
     const userId = generateId(15);
 
-    const avatarUrl = discordUser.avatar
-      ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.webp`
-      : `https://cdn.discordapp.com/embed/avatars/${Number(discordUser.discriminator) % 5}.png`;
-
     await db.insert(User).values({
       id: userId,
       discord_id: discordUser.id,
       username: discordUser.username,
-      avatar: avatarUrl,
-      accent_color: '#' + discordUser.accent_color.toString(16).padStart(6, '0'),
+      avatar: discordUser.avatarUrl,
+      accent_color: discordUser.accentColor,
       name: discordUser.global_name
     });
 
@@ -87,7 +96,6 @@ export async function GET(context: APIContext): Promise<Response> {
     context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     return context.redirect('/');
   } catch (e) {
-    // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
       // invalid code
       return new Response(null, {

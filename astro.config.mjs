@@ -1,4 +1,5 @@
-import vercel from "@astrojs/vercel/serverless";
+// import vercel from "@astrojs/vercel/serverless";
+import cloudflare from "@astrojs/cloudflare";
 import db from "@astrojs/db";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
@@ -13,5 +14,5 @@ export default defineConfig({
       exclude: ["oslo", "astro:db"]
     }
   },
-  adapter: vercel()
+  adapter: cloudflare()
 });
