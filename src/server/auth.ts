@@ -1,3 +1,4 @@
+import { DEPLOY_URL } from '@configs/index';
 import { Discord } from 'arctic';
 import { db, Session, User } from 'astro:db';
 import { Lucia } from 'lucia';
@@ -33,5 +34,5 @@ declare module 'lucia' {
 export const discord = new Discord(
   import.meta.env.DISCORD_CLIENT_ID,
   import.meta.env.DISCORD_CLIENT_SECRET,
-  `http://localhost:4321/api/v1/oauth/discord/callback`
+  `${DEPLOY_URL}/api/v1/oauth/discord/callback`
 );

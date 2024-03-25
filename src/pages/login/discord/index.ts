@@ -6,7 +6,7 @@ import type { APIContext } from 'astro';
 export async function GET(context: APIContext): Promise<Response> {
   const state = generateState();
   const url = await discord.createAuthorizationURL(state, {
-    scopes: ['identify', 'guilds']
+    scopes: ['identify', 'guilds'],
   });
   console.log(state);
   context.cookies.set('discord_oauth_state', state, {
