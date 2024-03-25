@@ -1,0 +1,60 @@
+---
+import { Menu } from 'lucide-astro';
+import SiteLogo from './SiteLogo.astro';
+const { user } = Astro.locals;
+---
+
+<header class="sticky top-0">
+  <div class="navbar bg-base-100">
+    <div class="flex-none">
+      <button class="btn btn-square btn-ghost hidden">
+        <Menu class="size-5" />
+      </button>
+      <a href="/" class="btn btn-ghost text-xl">
+        <SiteLogo class="size-7" /> Devs Overflow
+      </a>
+    </div>
+    <div class="flex flex-1 justify-center">
+      <nav>
+        <ul class="flex gap-4">
+          <li>
+            <a href="/discord" class="btn btn-ghost">Servidor Discord</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="flex-none gap-2">
+      {
+        !user ? (
+          <a href="/login" class="btn btn-primary">
+            Login
+          </a>
+        ) : (
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="avatar btn btn-circle btn-ghost">
+              <div class="w-10 rounded-full">
+                <img alt="Tailwind CSS Navbar component" src={user.avatar} />
+              </div>
+            </div>
+            <ul tabindex="0" class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
+              <li>
+                <a class="justify-between">
+                  Profile
+                  <span class="badge">New</span>
+                </a>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <form method="post" action="/logout">
+                  <button type="submit">Logout</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</header>

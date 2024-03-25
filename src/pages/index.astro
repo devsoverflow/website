@@ -1,0 +1,26 @@
+---
+import SiteHeader from '@comps/SiteHeader.astro';
+import SiteLogo from '@comps/SiteLogo.astro';
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout title="Devs Overflow">
+  <SiteHeader />
+
+  <main class="space-y-8">
+    <h1 class="flex gap-x-4 text-5xl font-bold leading-none">Devs Overflow <SiteLogo class="size-12" /></h1>
+    <p class="">Aca va a haber algo.</p>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>
