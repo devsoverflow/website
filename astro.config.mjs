@@ -4,9 +4,11 @@ import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel/serverless";
 import { defineConfig } from 'astro/config';
 
+import svelte from "@astrojs/svelte";
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [sitemap(), tailwind(), db()],
+  integrations: [sitemap(), tailwind(), db(), svelte()],
   output: 'server',
   vite: {
     optimizeDeps: {
@@ -16,5 +18,5 @@ export default defineConfig({
   adapter: vercel({
     imageService: true
   }),
-  site: "https://devsoverflow.vercel.app",
+  site: "https://devsoverflow.vercel.app"
 });

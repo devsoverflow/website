@@ -19,7 +19,8 @@ export const lucia = new Lucia(adapter, {
       username: attributes.username,
       name: attributes.name,
       accentColor: attributes.accent_color,
-      avatar: attributes.avatar
+      avatar: attributes.avatar,
+      logosClicked: attributes.logos_clicked
     };
   }
 });

@@ -1,5 +1,6 @@
 import { column, defineDb, defineTable } from 'astro:db';
 
+// Necessary for lucia-auth
 const User = defineTable({
   columns: {
     id: column.text({
@@ -9,10 +10,12 @@ const User = defineTable({
     username: column.text(),
     avatar: column.text(),
     name: column.text(),
-    accent_color: column.text()
+    accent_color: column.text(),
+    logos_clicked: column.number({ default: 0 })
   }
 });
 
+// Necessary for lucia-auth
 const Session = defineTable({
   columns: {
     id: column.text({
@@ -25,9 +28,35 @@ const Session = defineTable({
   }
 });
 
+const ProgrammingLanguage = defineTable({
+  columns: {
+    id: column.text({
+      primaryKey: true
+    }),
+    name: column.text(),
+    color: column.text(),
+    icon: column.text()
+  }
+});
+
+const UserProgrammingLanguage = defineTable({
+  columns: {
+    userId: column.text({ references: () => User.columns.id }),
+    programmingLanguageId: column.text({ references: () => ProgrammingLanguage.columns.id })
+  },
+  indexes: {
+    user_programming_language_unique: {
+      on: ['userId', 'programmingLanguageId'],
+      unique: true
+    }
+  }
+});
+
 export default defineDb({
   tables: {
     User,
-    Session
+    Session,
+    ProgrammingLanguage,
+    UserProgrammingLanguage
   }
 });

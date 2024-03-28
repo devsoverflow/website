@@ -8,7 +8,6 @@ export async function GET(context: APIContext): Promise<Response> {
   const url = await discord.createAuthorizationURL(state, {
     scopes: ['identify', 'guilds'],
   });
-  console.log(state);
   context.cookies.set('discord_oauth_state', state, {
     path: '/',
     secure: import.meta.env.PROD,
