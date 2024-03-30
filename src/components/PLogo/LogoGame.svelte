@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { progLangs, type ProgLang } from '@configs/prog_langs';
+  import { prog_langs, type ProgLang } from '@/configs/prog_langs';
+  import { plogos_found } from '@/stores/plogos';
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
 
@@ -69,7 +70,7 @@
     return logos;
   }
 
-  const logos: Logo[] = init_logos([...progLangs]);
+  const logos: Logo[] = init_logos([...prog_langs]);
 
   let current_logo: Logo = logos[0]!;
   let logo_el: HTMLDivElement;
@@ -224,18 +225,26 @@
       schedule_next_logo();
     }, EXPLOSION_DURATION);
 
-    fetch(`/api/v1/user/prog_langs/clicked?id=${current_logo.data.id}`, { method: 'POST' })
-      .then((res) => {
-        if (!res.ok) {
-          console.error('Failed to update user clicked logos');
-          return;
-        }
+    clicks += 1;
 
-        clicks += 1;
-      })
-      .catch((err) => {
-        console.error('Failed to update user clicked logos', err);
-      });
+    if (user) {
+      fetch(`/api/v1/user/prog_langs/clicked?id=${current_logo.data.id}`, { method: 'POST' })
+        .then((res) => {
+          if (!res.ok) {
+            console.error('Failed to update user clicked logos');
+            return;
+          }
+          console.info('User clicked logos updated');
+        })
+        .catch((err) => {
+          console.error('Failed to update user clicked logos', err);
+        });
+    }
+
+    if (!$plogos_found.has(current_logo.data.id)) {
+      $plogos_found.add(current_logo.data.id);
+      plogos_found.set(new Set($plogos_found));
+    }
   }
 
   onMount(() => {

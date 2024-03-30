@@ -1,4 +1,4 @@
-import { progLangs } from '@configs/prog_langs';
+import { prog_langs } from '@/configs/prog_langs';
 import { ProgrammingLanguage, db } from 'astro:db';
 
 /**
@@ -11,12 +11,12 @@ import { ProgrammingLanguage, db } from 'astro:db';
  * ```bash
  * astro db execute <file-path> --remote
  * ```
- * 
+ *
  * In this case:
  * ```bash
  * astro db execute db/seed.ts --remote
  * ```
  */
 export default async function () {
-  await db.insert(ProgrammingLanguage).values(progLangs);
+  await db.insert(ProgrammingLanguage).values(prog_langs);
 }

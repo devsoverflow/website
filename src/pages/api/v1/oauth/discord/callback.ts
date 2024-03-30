@@ -1,4 +1,4 @@
-import { discord, lucia } from '@server/auth';
+import { discord, extract_redirect_to_cookie, lucia } from '@/server/auth';
 import { OAuth2RequestError } from 'arctic';
 import type { APIContext } from 'astro';
 import { User, db, eq } from 'astro:db';
@@ -26,7 +26,7 @@ interface CustomDiscordUser extends DiscordUser {
   accentColor: string;
 }
 
-function parseDiscordUser(user: DiscordUser):CustomDiscordUser {
+function parseDiscordUser(user: DiscordUser): CustomDiscordUser {
   return {
     ...user,
     avatarUrl: user.avatar
@@ -45,6 +45,8 @@ export async function GET(context: APIContext): Promise<Response> {
       status: 400
     });
   }
+
+  const redirect_to = extract_redirect_to_cookie(context) ?? '/';
 
   try {
     const tokens = await discord.validateAuthorizationCode(code);
@@ -77,7 +79,7 @@ export async function GET(context: APIContext): Promise<Response> {
           .where(eq(User.id, dbUser.id));
       }
 
-      return context.redirect('/');
+      return context.redirect(redirect_to);
     }
 
     const userId = generateId(15);
@@ -94,7 +96,7 @@ export async function GET(context: APIContext): Promise<Response> {
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return context.redirect('/');
+    return context.redirect(redirect_to);
   } catch (e) {
     if (e instanceof OAuth2RequestError) {
       // invalid code

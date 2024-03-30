@@ -35,7 +35,8 @@ const ProgrammingLanguage = defineTable({
     }),
     name: column.text(),
     color: column.text(),
-    icon: column.text()
+    icon: column.text(),
+    homepage: column.text()
   }
 });
 

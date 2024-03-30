@@ -1,7 +1,7 @@
 ---
-import SiteHeader from '@comps/SiteHeader.astro';
-import { progLangs } from '@configs/prog_langs';
-import Layout from '@layouts/Layout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import { prog_langs } from '@/configs/prog_langs';
+import Layout from '@/layouts/Layout.astro';
 ---
 
 <Layout title="Devs Overflow">
@@ -9,7 +9,7 @@ import Layout from '@layouts/Layout.astro';
 
   <ul class="flex flex-wrap justify-center">
     {
-      progLangs.map((lang) => (
+      prog_langs.map((lang) => (
         <li class="m-4 rounded-lg border-2 bg-neutral-500/25 p-4 shadow-md" style={`border-color: ${lang.color}`}>
           <img src={lang.icon} alt={lang.name} class="mx-auto h-16 w-16" />
         </li>

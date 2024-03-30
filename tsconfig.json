@@ -3,11 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@assets/*": ["src/assets/*"],
-      "@comps/*": ["src/components/*"],
-      "@configs/*": ["src/configs/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@server/*": ["src/server/*"]
+      "@/*": ["src/*"],
+      "@/configs/*": ["src/configs/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/server/*": ["src/server/*"]
     },
     "allowJs": true
   }
