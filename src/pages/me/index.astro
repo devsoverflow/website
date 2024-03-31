@@ -1,13 +1,16 @@
 ---
+import IconCalendar from '@/assets/icons/calendar.svg?raw';
 import LogoShowcase from '@/components/PLogo/LogoShowcase.svelte';
+import PageMain from '@/components/PageMain.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
-import SiteLogo from '@/components/SiteLogo.astro';
 import Layout from '@/layouts/Layout.astro';
-import { UserProgrammingLanguage, db, eq, isNotNull, ProgrammingLanguage } from 'astro:db';
+import { ProgrammingLanguage, UserProgrammingLanguage, db, eq, isNotNull } from 'astro:db';
 
 if (!Astro.locals.user) {
   return Astro.redirect('/login/discord?redirect_to=/me');
 }
+
+const { user } = Astro.locals;
 
 const logos_all = await db
   .select({
@@ -17,16 +20,6 @@ const logos_all = await db
   .from(ProgrammingLanguage)
   .leftJoin(UserProgrammingLanguage, eq(ProgrammingLanguage.id, UserProgrammingLanguage.programmingLanguageId));
 
-// const logos_found: (typeof logos_all)[number]['logo'][] = [];
-// const logos_not_found: (typeof logos_all)[number]['logo'][] = [];
-
-// for (const logo of logos_all) {
-//   if (logo.user) {
-//     logos_found.push(logo.logo);
-//   } else {
-//     logos_not_found.push(logo.logo);
-//   }
-// }
 const logos_found = new Set<string>();
 for (const logo of logos_all) {
   if (logo.user) {
@@ -38,22 +31,28 @@ for (const logo of logos_all) {
 <Layout title="Devs Overflow">
   <SiteHeader />
 
-  <main class="space-y-8">
-    <h1 class="flex gap-x-4 text-5xl font-bold leading-none">Devs Overflow <SiteLogo class="size-12" /></h1>
-    <p class="">Aca va a haber algo.</p>
+  <PageMain class="pb-16">
+    <header class="my-4 space-y-4">
+      <h1 class="flex gap-x-4 text-4xl font-bold leading-none">My profile</h1>
+    </header>
 
-    <LogoShowcase found_ids={logos_found} client:load/>
-  </main>
+    <section class="space-y-4 py-8">
+      <h2 class="text-2xl font-bold">Information</h2>
+      <div class="flex flex-wrap gap-4 py-4">
+        <div class="size-32 overflow-hidden rounded-md">
+          <img src={user.avatar} alt=`Avatar of ${user.name}` />
+        </div>
+        <div class="my-auto space-y-2">
+          <p class="flex text-2xl font-semibold">{user.name}</p>
+          <p class="flex text-lg font-medium" title="Discord username">@{user.username}</p>
+          <p class="flex text-lg font-medium" title="Date joined">
+            <span class="mr-2 inline-block" set:html={IconCalendar} />
+            {user.joinedAt.toLocaleDateString()}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <LogoShowcase found_ids={logos_found} client:load />
+  </PageMain>
 </Layout>
-
-<style>
-  main {
-    margin: auto;
-    padding: 1rem;
-    width: 800px;
-    max-width: calc(100% - 2rem);
-    color: white;
-    font-size: 20px;
-    line-height: 1.6;
-  }
-</style>

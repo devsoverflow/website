@@ -21,7 +21,8 @@ export const lucia = new Lucia(adapter, {
       name: attributes.name,
       accentColor: attributes.accent_color,
       avatar: attributes.avatar,
-      logosClicked: attributes.logos_clicked
+      logosClicked: attributes.logos_clicked,
+      joinedAt: attributes.joined_at
     };
   }
 });

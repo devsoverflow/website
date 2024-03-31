@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro';
-import { User, UserProgrammingLanguage, db, eq, isDbError } from 'astro:db';
+import { User, UserProgrammingLanguage, db, eq, isDbError, sql } from 'astro:db';
 
 export async function POST({ locals, request }: APIContext) {
   if (!locals.user) {
@@ -17,6 +17,7 @@ export async function POST({ locals, request }: APIContext) {
     });
   }
 
+  let inserted: typeof UserProgrammingLanguage.$inferSelect;
   try {
     await db
       .update(User)
@@ -25,21 +26,29 @@ export async function POST({ locals, request }: APIContext) {
       })
       .where(eq(User.id, locals.user.id));
 
-    await db
+    inserted = await db
       .insert(UserProgrammingLanguage)
       .values({
         userId: locals.user.id,
         programmingLanguageId: logo_id
       })
-      .onConflictDoNothing();
-  } catch (error) {
-    if (isDbError(error) && error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
-      return new Response(null, {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json'
+      .onConflictDoUpdate({
+        target: [UserProgrammingLanguage.userId, UserProgrammingLanguage.programmingLanguageId],
+        set: {
+          count: sql<number>`${UserProgrammingLanguage.count} + 1`
         }
-      });
+      })
+      .returning()
+      .get();
+  } catch (error) {
+    console.error(error);
+    if (isDbError(error) && error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
+      // return new Response(null, {
+      //   status: 200,
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // });
     }
 
     console.error(error);
@@ -50,7 +59,7 @@ export async function POST({ locals, request }: APIContext) {
     });
   }
 
-  return new Response(null, {
+  return new Response(JSON.stringify(inserted), {
     status: 200,
     headers: {
       'Content-Type': 'application/json'

@@ -55,22 +55,36 @@
   });
 </script>
 
-<section>
-  <h2>Logos</h2>
-  <p>Logos encontrados</p>
-  <ul class="flex flex-wrap gap-4">
-    {#each logos_found as logo (logo.id)}
-      <li in:receive={{ key: logo.id }} out:send={{ key: logo.id }} animate:flip={{ duration: 200 }}>
-        <LogoCard {logo} found />
-      </li>
-    {/each}
-  </ul>
-  <p>Logos no encontrados</p>
-  <ul class="grid grid-cols-3 gap-4">
-    {#each logos_not_found as logo (logo.id)}
-      <li in:receive={{ key: logo.id }} out:send={{ key: logo.id }} animate:flip={{ duration: 200 }}>
-        <LogoCard {logo} found={false} />
-      </li>
-    {/each}
-  </ul>
+<section class="space-y-4 py-8">
+  <h2 class="text-2xl font-bold">Logos collection</h2>
+  <div class="py-4">
+    <h3 class="text-xl font-semibold">Found - {logos_found.length}</h3>
+    <ul class="my-4 flex flex-wrap gap-6 px-4">
+      {#each logos_found as logo (logo.id)}
+        <li
+          in:receive={{ key: logo.id }}
+          out:send={{ key: logo.id }}
+          animate:flip={{ duration: 200 }}
+          class="w-48 md:w-56"
+        >
+          <LogoCard {logo} found />
+        </li>
+      {/each}
+    </ul>
+  </div>
+  <div class="py-4">
+    <h3 class="text-xl font-semibold">To be found - {logos_not_found.length}</h3>
+    <ul class="my-4 flex flex-wrap gap-6 px-4">
+      {#each logos_not_found as logo (logo.id)}
+        <li
+          in:receive={{ key: logo.id }}
+          out:send={{ key: logo.id }}
+          animate:flip={{ duration: 200 }}
+          class="w-48 md:w-56"
+        >
+          <LogoCard {logo} found={false} />
+        </li>
+      {/each}
+    </ul>
+  </div>
 </section>

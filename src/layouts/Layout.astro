@@ -19,8 +19,36 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body data-theme="devsoverflow">
-    <slot />
-    <LogoGame client:only user={Astro.locals.user} />
+  <body data-theme="devsoverflow" class="overflow-hidden">
+    <div class="relative h-full overflow-y-auto page-scroll">
+      <slot />
+      <LogoGame client:only user={Astro.locals.user} />
+    </div>
   </body>
 </html>
+
+<style>
+  .page-scroll {
+    --scrollbar-size: 6px;
+    transition: all 0.3s ease;
+  }
+  @media screen and (min-width: 1024px){
+    .page-scroll {
+      --scrollbar-size: 8px;
+    }
+  }
+
+  .page-scroll::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    border-left: 1px solid black;
+  }
+
+  .page-scroll::-webkit-scrollbar-thumb {
+    background-color: hsl(0, 100%, 50%, 0.4);
+    border-left: 1px solid black;
+  }
+
+  .page-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(0, 100%, 50%, 0.8); 
+  }
+</style>

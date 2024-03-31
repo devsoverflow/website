@@ -234,6 +234,9 @@
             console.error('Failed to update user clicked logos');
             return;
           }
+          res.json().then((data) => {
+            console.info('User clicked logos updated', data);
+          });
           console.info('User clicked logos updated');
         })
         .catch((err) => {
@@ -299,7 +302,7 @@
   });
 </script>
 
-<div class="pointer-events-none fixed inset-0 z-10 overflow-hidden">
+<div class="pointer-events-none fixed inset-0 z-50 overflow-hidden">
   {#if user && current_logo}
     <div
       bind:this={logo_el}
@@ -353,28 +356,31 @@
   {/if}
 </div>
 
-{#if clicks > 0}
-  <div class="pointer-events-none absolute bottom-0 right-0">
-    <p class="inline-block p-2 text-end text-2xl font-bold !leading-none sm:text-4xl">
-      <span class="inline-block font-mono text-[1em]">&nbsp;</span>
-      <span class="text-[0.5em]">X </span>{#key clicks}
-        <span in:slide={{ axis: 'y' }} class="inline-block font-mono text-[1em]">{clicks}</span>
-      {/key}
-    </p>
+<!-- scrollbar in count -->
+<div
+  class="pointer-events-none fixed left-0 top-0 z-50 h-full w-[calc(100%-var(--scrollbar-size,0))] overflow-hidden"
+>
+  <div class="absolute bottom-2 right-2 flex items-end">
+    {#if import.meta.env.DEV}
+      <div class="">
+        <button
+          on:click={() => {
+            schedule_next_logo();
+            clicks += 1;
+          }}
+          class="pointer-events-auto rounded-lg bg-neutral-50 p-2 font-bold text-neutral-950 shadow-lg"
+        >
+          Next
+        </button>
+      </div>
+      <!-- <code class="pointer-events-none absolute bottom-0 left-0 text-sm"><pre>{JSON.stringify({ current_logo, cursor }, null, 2)}</pre></code> -->
+    {/if}
+    {#if clicks > 0}
+        <p class="inline-block text-end text-2xl font-bold !leading-none sm:text-4xl">
+          <span class="inline-block font-mono text-[1em]">&nbsp;</span><span class="text-[0.5em]">X </span>{#key clicks}
+            <span in:slide={{ axis: 'y' }} class="inline-block font-mono text-[1em]">{clicks}</span>
+          {/key}
+        </p>
+    {/if}
   </div>
-{/if}
-
-{#if import.meta.env.DEV}
-  <div class="absolute bottom-12 right-2">
-    <button
-      on:click={() => {
-        schedule_next_logo();
-        clicks += 1;
-      }}
-      class="rounded-lg bg-neutral-50 p-2 font-bold text-neutral-950 shadow-lg"
-    >
-      Next
-    </button>
-  </div>
-  <!-- <code class="pointer-events-none absolute bottom-0 left-0 text-sm"><pre>{JSON.stringify({ current_logo, cursor }, null, 2)}</pre></code> -->
-{/if}
+</div>

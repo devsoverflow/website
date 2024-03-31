@@ -4,8 +4,9 @@ import SiteLogo from './SiteLogo.astro';
 const { user } = Astro.locals;
 ---
 
-<header class="sticky top-0 z-10">
-  <div class="navbar">
+<div id="site-scroll-detection" class="absolute left-0 top-0 z-40 size-px bg-teal-500"></div>
+<header id="site-header" class="sticky top-0 z-20 flex h-16 w-full !shadow-black/80 transition-shadow duration-300 data-[sticking]:shadow-lg">
+  <div class="navbar bg-base-100/[0.965]">
     <div class="flex-none">
       <button class="btn btn-square btn-ghost hidden">
         <Menu class="size-5" />
@@ -38,9 +39,8 @@ const { user } = Astro.locals;
             </div>
             <ul tabindex="0" class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
               <li>
-                <a class="justify-between">
+                <a href="/me" class="justify-between">
                   Profile
-                  <span class="badge">New</span>
                 </a>
               </li>
               <li>
@@ -55,3 +55,19 @@ const { user } = Astro.locals;
     </div>
   </div>
 </header>
+
+<script>
+  const header_el = document.getElementById('site-header');
+  const header_el_top = document.getElementById('site-scroll-detection');
+  if (!header_el || !header_el_top) {
+    throw new Error('Invalid site header or scroll detection id');
+  }
+  const site_header_observer = new IntersectionObserver(
+    (entries) => {
+      header_el.toggleAttribute('data-sticking', entries[0]?.intersectionRatio === 0);
+    },
+    { threshold: [0, 1] }
+  );
+
+  site_header_observer.observe(header_el_top);
+</script>
