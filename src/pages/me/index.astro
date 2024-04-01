@@ -4,7 +4,7 @@ import LogoShowcase from '@/components/PLogo/LogoShowcase.svelte';
 import PageMain from '@/components/PageMain.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import Layout from '@/layouts/Layout.astro';
-import { ProgrammingLanguage, UserProgrammingLanguage, db, eq, isNotNull } from 'astro:db';
+import { ProgrammingLanguage, UserProgrammingLanguage, db, eq } from 'astro:db';
 
 if (!Astro.locals.user) {
   return Astro.redirect('/login/discord?redirect_to=/me');
@@ -15,15 +15,16 @@ const { user } = Astro.locals;
 const logos_all = await db
   .select({
     logo_id: ProgrammingLanguage.id,
-    user: isNotNull(UserProgrammingLanguage.userId)
+    logo_count: UserProgrammingLanguage.count
   })
   .from(ProgrammingLanguage)
   .leftJoin(UserProgrammingLanguage, eq(ProgrammingLanguage.id, UserProgrammingLanguage.programmingLanguageId));
 
-const logos_found = new Set<string>();
+const logos_found: Record<string, number> = {};
+
 for (const logo of logos_all) {
-  if (logo.user) {
-    logos_found.add(logo.logo_id);
+  if (logo.logo_count !== null && logo.logo_count > 0) {
+    logos_found[logo.logo_id] = logo.logo_count;
   }
 }
 ---
@@ -38,7 +39,7 @@ for (const logo of logos_all) {
 
     <section class="space-y-4 py-8">
       <h2 class="text-2xl font-bold">Information</h2>
-      <div class="flex flex-wrap gap-4 py-4">
+      <div class="flex flex-wrap gap-4 px-4 py-4">
         <div class="size-32 overflow-hidden rounded-md">
           <img src={user.avatar} alt=`Avatar of ${user.name}` />
         </div>
@@ -53,6 +54,6 @@ for (const logo of logos_all) {
       </div>
     </section>
 
-    <LogoShowcase found_ids={logos_found} client:load />
+    <LogoShowcase logosFound={logos_found} client:load />
   </PageMain>
 </Layout>

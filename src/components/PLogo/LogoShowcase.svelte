@@ -6,46 +6,41 @@
   import LogoCard from './LogoCard.svelte';
   import { receive, send } from './transition';
 
-  export let found_ids: Set<string>;
+  export let logosFound: Record<string, number>;
 
-  let logos_found: ProgLang[] = [];
-  let logos_not_found: ProgLang[] = [];
+  type Logo = ProgLang & { count: number };
+
+  const base_logos: Logo[] = [];
+  for (const plang of prog_langs) {
+    base_logos.push({ ...plang, count: 0 });
+  }
+  base_logos.sort((a, b) => a.name.localeCompare(b.name));
+
+  let logos_found: Logo[] = [];
+  let logos_not_found: Logo[] = [];
+
   function update_logos() {
     logos_found = [];
     logos_not_found = [];
-    console.log('found_ids', ...found_ids);
-    for (const logo of prog_langs) {
-      if (found_ids.has(logo.id)) {
+    for (const logo of base_logos) {
+      if (logo.id in logosFound) {
+        logo.count = logosFound[logo.id]!;
         logos_found.push(logo);
       } else {
         logos_not_found.push(logo);
       }
     }
-    logos_found = logos_found;
+    logos_found = logos_found.sort((a, b) => b.count - a.count);
     logos_not_found = logos_not_found;
-    console.log('logos_found', logos_found);
-    console.log('logos_not_found', logos_not_found);
   }
+
   update_logos();
-  // $: {
-  //   logos_found = [];
-  //   logos_not_found = [];
-  //   for (const logo of prog_langs) {
-  //     if ($plogos_found.has(logo.id)) {
-  //       logos_found.push(logo);
-  //     }
-  //     else {
-  //       logos_not_found.push(logo);
-  //     }
-  //   }
-  // }
 
   onMount(() => {
-    plogos_found.set(found_ids);
+    plogos_found.set(logosFound);
 
     const cu = plogos_found.subscribe((value) => {
-      console.log('value', value);
-      found_ids = value;
+      logosFound = value;
       update_logos();
     });
 
@@ -67,7 +62,7 @@
           animate:flip={{ duration: 200 }}
           class="w-48 md:w-56"
         >
-          <LogoCard {logo} found />
+          <LogoCard {logo} found count={logo.count} />
         </li>
       {/each}
     </ul>
@@ -82,7 +77,7 @@
           animate:flip={{ duration: 200 }}
           class="w-48 md:w-56"
         >
-          <LogoCard {logo} found={false} />
+          <LogoCard {logo} />
         </li>
       {/each}
     </ul>

@@ -13,7 +13,7 @@ export async function POST({ locals, request }: APIContext) {
   if (!logo_id || typeof logo_id !== 'string') {
     return new Response(null, {
       status: 400,
-      statusText: 'Bad Request'
+      statusText: 'Bad Request - Invalid id'
     });
   }
 
@@ -41,7 +41,6 @@ export async function POST({ locals, request }: APIContext) {
       .returning()
       .get();
   } catch (error) {
-    console.error(error);
     if (isDbError(error) && error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
       // return new Response(null, {
       //   status: 200,

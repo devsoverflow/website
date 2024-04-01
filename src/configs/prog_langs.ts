@@ -88,7 +88,7 @@ export const prog_langs: ProgLang[] = [
     homepage: 'https://dotnet.microsoft.com/en-us/languages/csharp'
   },
   {
-    id: 'c++',
+    id: 'cplusplus',
     name: 'c++',
     color: '#00599C',
     icon: '/prog_langs/icons/c++.svg',

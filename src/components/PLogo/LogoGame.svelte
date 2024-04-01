@@ -19,6 +19,7 @@
 
   const AVOIDING_TRESHOLD = LOGO_SIZE * 1.5 + LOGO_SIZE / 2;
   const AVOIDING_FACTOR = 1;
+  const AVOIDING_MAX_SPEED = 16;
 
   const EXPLOSION_DURATION = 0.8 * 1000;
   const EXPLOSION_FADE = 0.4 * 1000;
@@ -196,9 +197,12 @@
       current_logo.avoiding = true;
       current_logo.dir.x = (dx / dist) * -1;
       current_logo.dir.y = (dy / dist) * -1;
-      current_logo.speed =
-        (1 / (dist / (AVOIDING_TRESHOLD * AVOIDING_FACTOR))) * current_logo.initial.speed * current_logo.initial.speed;
+      current_logo.speed = Math.min(
+        (1 / (dist / (AVOIDING_TRESHOLD * AVOIDING_FACTOR))) * current_logo.initial.speed * current_logo.initial.speed,
+        AVOIDING_MAX_SPEED
+      );
     }
+
     current_logo.pos.x += current_logo.dir.x * current_logo.pos.z * current_logo.speed;
     current_logo.pos.y += current_logo.dir.y * current_logo.pos.z * current_logo.speed;
     logo_el.style.transform = `translate(${current_logo.pos.x}px, ${current_logo.pos.y}px)`;
@@ -228,26 +232,23 @@
     clicks += 1;
 
     if (user) {
-      fetch(`/api/v1/user/prog_langs/clicked?id=${current_logo.data.id}`, { method: 'POST' })
+      fetch(`/api/v1/user/prog_langs/clicked?id=${encodeURIComponent(current_logo.data.id)}`, { method: 'POST' })
         .then((res) => {
           if (!res.ok) {
             console.error('Failed to update user clicked logos');
             return;
           }
           res.json().then((data) => {
-            console.info('User clicked logos updated', data);
+            plogos_found.setKey(current_logo.data.id, data.count);
           });
-          console.info('User clicked logos updated');
         })
         .catch((err) => {
           console.error('Failed to update user clicked logos', err);
         });
     }
 
-    if (!$plogos_found.has(current_logo.data.id)) {
-      $plogos_found.add(current_logo.data.id);
-      plogos_found.set(new Set($plogos_found));
-    }
+    const acc_clicks = $plogos_found[current_logo.data.id] ?? 0;
+    plogos_found.setKey(current_logo.data.id, acc_clicks + 1);
   }
 
   onMount(() => {
@@ -357,9 +358,7 @@
 </div>
 
 <!-- scrollbar in count -->
-<div
-  class="pointer-events-none fixed left-0 top-0 z-50 h-full w-[calc(100%-var(--scrollbar-size,0))] overflow-hidden"
->
+<div class="pointer-events-none fixed left-0 top-0 z-50 h-full w-[calc(100%-var(--scrollbar-size,0))] overflow-hidden">
   <div class="absolute bottom-2 right-2 flex items-end">
     {#if import.meta.env.DEV}
       <div class="">
@@ -376,11 +375,11 @@
       <!-- <code class="pointer-events-none absolute bottom-0 left-0 text-sm"><pre>{JSON.stringify({ current_logo, cursor }, null, 2)}</pre></code> -->
     {/if}
     {#if clicks > 0}
-        <p class="inline-block text-end text-2xl font-bold !leading-none sm:text-4xl">
-          <span class="inline-block font-mono text-[1em]">&nbsp;</span><span class="text-[0.5em]">X </span>{#key clicks}
-            <span in:slide={{ axis: 'y' }} class="inline-block font-mono text-[1em]">{clicks}</span>
-          {/key}
-        </p>
+      <p class="inline-block text-end text-2xl font-bold !leading-none sm:text-4xl">
+        <span class="inline-block font-mono text-[1em]">&nbsp;</span><span class="text-[0.5em]">X </span>{#key clicks}
+          <span in:slide={{ axis: 'y' }} class="inline-block font-mono text-[1em]">{clicks}</span>
+        {/key}
+      </p>
     {/if}
   </div>
 </div>

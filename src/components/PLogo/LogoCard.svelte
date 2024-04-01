@@ -1,10 +1,11 @@
 <script lang="ts">
   import IconInfo from '@/assets/icons/info.svg?raw';
   import type { ProgLang } from '@/configs/prog_langs';
+  import { slide } from 'svelte/transition';
   import { hover3d } from './hover3d_effect';
 
   export let logo: ProgLang;
-  export let found: boolean = true;
+  export let found: boolean = false;
   export let count: number = 0;
 </script>
 
@@ -32,7 +33,12 @@
           ><span class="hover:white size-full">{@html IconInfo}</span></a
         >
       </div>
-      <div class="mt-auto text-lg font-bold text-neutral-content"><span class="text-base">x</span> {count}</div>
+      {#key count}
+        <div in:slide={{ axis: 'y', duration: 500 }} class="mt-auto text-lg font-bold text-neutral-content">
+          <span class="text-[0.6em]">X</span>
+          {count}
+        </div>
+      {/key}
     {:else}
       <p class="w-full text-center text-lg font-bold text-neutral-content">Not found</p>
     {/if}
@@ -42,7 +48,6 @@
 <style>
   .my-card {
     background: linear-gradient(120deg, hsl(0, 85%, 5%) 20%, hsl(0, 85%, 25%));
-    /* box-shadow: 0 1px 5px #000000; */
     transition-duration: 300ms;
     transition-property: transform, box-shadow;
     transition-timing-function: ease-out;
