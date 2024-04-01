@@ -1,46 +1,64 @@
 ---
 import { Menu } from 'lucide-astro';
 import SiteLogo from './SiteLogo.astro';
+import IconLogin from '@/assets/icons/log-in.svg?raw';
+
 const { user } = Astro.locals;
 ---
 
 <div id="site-scroll-detection" class="absolute left-0 top-0 z-40 size-px bg-teal-500"></div>
-<header id="site-header" class="sticky top-0 z-20 flex h-16 w-full !shadow-black/80 transition-shadow duration-300 data-[sticking]:shadow-lg">
+<header
+  id="site-header"
+  class="sticky top-0 z-20 flex h-16 w-full !shadow-black/80 transition-shadow duration-300 data-[sticking]:shadow-lg"
+>
   <div class="navbar bg-base-100/[0.965]">
-    <div class="flex-none">
+    <div class="w-1/5 flex-none">
       <button class="btn btn-square btn-ghost hidden">
         <Menu class="size-5" />
       </button>
-      <a href="/" class="btn btn-ghost text-xl">
-        <SiteLogo class="size-7" /> Devs Overflow
+      <a href="/" class="btn btn-ghost text-xl" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>
+        <SiteLogo class="size-10" />
+        <span class="hidden sm:inline lg:hidden">DO</span><span class="hidden lg:inline">Devs Overflow</span>
       </a>
     </div>
-    <div class="flex flex-1 justify-center">
+    <div class="flex w-3/5 flex-1 justify-center">
       <nav>
         <ul class="flex gap-4">
           <li>
-            <a href="/discord" class="btn btn-ghost">Discord Server</a>
+            <a href="/discord" target="_blank" class="btn btn-ghost">Discord Server</a>
           </li>
         </ul>
       </nav>
     </div>
-    <div class="flex-none gap-2">
+    <div class="w-1/5 flex-none justify-end gap-2">
       {
         !user ? (
-          <a href="/login/discord" class="btn btn-primary">
+          <a href="/login/discord" class="btn btn-ghost">
             Login
+            <span class="size-6">
+              <Fragment set:html={IconLogin} />
+            </span>
           </a>
         ) : (
-          <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="avatar btn btn-circle btn-ghost">
-              <div class="w-10 rounded-full">
-                <img alt="Tailwind CSS Navbar component" src={user.avatar} />
+          <div class="dropdown dropdown-end flex-none">
+            <div
+              tabindex="0"
+              role="button"
+              class="avatar btn btn-ghost flex-nowrap focus-within:bg-[oklch(var(--bc)/0.2)]"
+              title="Account menu"
+            >
+              <span class="line-clamp-2 hidden max-w-24 text-ellipsis sm:inline">{user.name}</span>
+              <div class="w-10 flex-none rounded-full">
+                <img src={user.avatar} alt={user.username + ' avatar'} class="size-full" />
               </div>
             </div>
-            <ul tabindex="0" class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
+            <ul
+              tabindex="0"
+              class="menu dropdown-content menu-md z-[1] mt-3 w-52 rounded-box bg-base-100/[0.975] p-2 shadow ring-1 ring-neutral"
+            >
               <li>
                 <a href="/me" class="justify-between">
-                  Profile
+                  Account
                 </a>
               </li>
               <li>
