@@ -20,7 +20,7 @@
   "
   class:not-found={!found}
 >
-  <img src={logo.icon} alt={logo.name} class="size-full rounded-xl" class:not-found={!found} />
+  <img src={logo.icon} alt={logo.name} class="size-full" class:not-found={!found} />
   <div class="my-4 flex min-h-16 flex-col justify-center">
     {#if found}
       <div class="flex justify-between">
@@ -40,7 +40,7 @@
         </div>
       {/key}
     {:else}
-      <p class="w-full text-center text-lg font-bold text-neutral-content">Not found</p>
+      <p class="w-full text-center text-lg font-bold capitalize text-neutral-content blur-sm">{logo.name}</p>
     {/if}
   </div>
 </div>
@@ -66,7 +66,6 @@
   }
 
   .my-card.not-found:hover {
-    filter: grayscale(75%);
     transform: scale(1.025) !important;
   }
 

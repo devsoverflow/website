@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="202.885 112.998 125.336 79.305" xmlns="http://www.w3.org/2000/svg">
+  <rect x="207.374" y="118.087" width="116.36" height="69.7"
+    style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill: rgb(255, 255, 255);"
+    transform="matrix(1, 0, 0, 1, -7.105427357601002e-15, 0)" />
+  <path
+    style="line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;isolation:auto;mix-blend-mode:normal;solid-color:#000;solid-opacity:1"
+    d="M 213.503 112.999 C 207.667 112.999 202.885 117.866 202.885 123.68 L 202.885 181.622 C 202.885 187.436 207.667 192.303 213.502 192.303 L 317.604 192.303 C 323.439 192.303 328.221 187.436 328.221 181.622 L 328.221 123.681 C 328.221 117.867 323.438 113 317.604 113 L 216.451 113 L 216.449 112.998 L 213.503 112.998 L 213.503 112.999 Z M 213.496 122.542 L 317.604 122.542 C 318.229 122.542 318.68 122.965 318.68 123.682 L 318.68 181.622 C 318.68 182.339 318.227 182.762 317.604 182.762 L 213.502 182.762 C 212.879 182.762 212.426 182.339 212.426 181.622 L 212.426 123.68 C 212.426 122.965 212.877 122.545 213.496 122.542 Z"
+    color="#000" font-weight="400" font-family="sans-serif" overflow="visible"
+    transform="matrix(1, 0, 0, 1, -7.105427357601002e-15, 0)" />
+  <path
+    d="M 222.274 172.751 L 222.274 132.551 L 233.973 132.551 L 245.67 147.331 L 257.363 132.551 L 269.059 132.551 L 269.059 172.751 L 257.363 172.751 L 257.363 149.695 L 245.669 164.475 L 233.971 149.695 L 233.971 172.751 L 222.275 172.751 L 222.274 172.751 Z M 295.378 172.751 L 277.833 153.242 L 289.53 153.242 L 289.53 132.551 L 301.228 132.551 L 301.228 153.241 L 312.926 153.241 L 295.378 172.751 Z M 295.378 172.751"
+    transform="matrix(1, 0, 0, 1, -7.105427357601002e-15, 0)" />
+</svg>

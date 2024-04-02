@@ -19,6 +19,19 @@
   let logos_found: Logo[] = [];
   let logos_not_found: Logo[] = [];
 
+  function replace_with_rand(original:string) {
+    const chars = '+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < original.length; i++) {
+      if (original[i] === ' ') {
+        result += ' ';
+      } else {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+    }
+    return result;
+  }
+
   function update_logos() {
     logos_found = [];
     logos_not_found = [];
@@ -27,7 +40,11 @@
         logo.count = logosFound[logo.id]!;
         logos_found.push(logo);
       } else {
-        logos_not_found.push(logo);
+        logos_not_found.push(
+          { ...logo,
+            name: replace_with_rand(logo.name),
+          }
+        );
       }
     }
     logos_found = logos_found.sort((a, b) => b.count - a.count);

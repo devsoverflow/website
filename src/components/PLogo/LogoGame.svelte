@@ -312,7 +312,7 @@
         absolute
         -left-[calc(var(--size,96px)/2)]
         -top-[calc(var(--size,96px)/2)]
-        size-[var(--size,96px)]"
+        size-[var(--size,0px)]"
     >
       <button on:pointerdown={on_loco_click} tabindex="-1" class="pointer-events-auto relative size-full select-none">
         <img src={current_logo.data.icon} alt="Logo de {current_logo.data.name}" class="size-full" draggable="false" />
