@@ -1,3 +1,4 @@
+// @ts-expect-error
 export function hover3d(node: HTMLElement, { duration = 1000, delay = 0, reverse = false, glow = true } = {}) {
   node.style.position = 'relative';
 

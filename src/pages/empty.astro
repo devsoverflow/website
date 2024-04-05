@@ -1,12 +1,14 @@
 ---
-import SiteHeader from '@/components/SiteHeader.astro';
 import { prog_langs } from '@/configs/prog_langs';
 import Layout from '@/layouts/Layout.astro';
+import { getServerStats } from '@/server/dsserver';
+
+const res = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
+
+console.log(res);
 ---
 
 <Layout title="Devs Overflow">
-  <SiteHeader />
-
   <ul class="flex flex-wrap justify-center">
     {
       prog_langs.map((lang) => (

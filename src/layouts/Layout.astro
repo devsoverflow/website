@@ -1,5 +1,7 @@
 ---
 import LogoGame from '@/components/PLogo/LogoGame.svelte';
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
 import '../global.postcss';
 
 interface Props {
@@ -20,8 +22,11 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body data-theme="devsoverflow" class="overflow-hidden">
-    <div class="relative h-full overflow-y-auto page-scroll">
+    <div class="page-scroll relative h-full overflow-y-auto">
+      <SiteHeader />
       <slot />
+      <SiteFooter />
+
       <LogoGame client:only user={Astro.locals.user} />
     </div>
   </body>
@@ -32,7 +37,8 @@ const { title } = Astro.props;
     --scrollbar-size: 6px;
     transition: all 0.3s ease;
   }
-  @media screen and (min-width: 1024px){
+
+  @media screen and (min-width: 1024px) {
     .page-scroll {
       --scrollbar-size: 8px;
     }
@@ -49,6 +55,6 @@ const { title } = Astro.props;
   }
 
   .page-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(0, 100%, 50%, 0.8); 
+    background-color: hsl(0, 100%, 50%, 0.8);
   }
 </style>

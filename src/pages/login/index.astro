@@ -1,5 +1,5 @@
 ---
-import SiteHeader from '@/components/SiteHeader.astro';
+import PageMain from '@/components/PageMain.astro';
 import Layout from '@/layouts/Layout.astro';
 
 if (Astro.locals.user) {
@@ -8,9 +8,11 @@ if (Astro.locals.user) {
 ---
 
 <Layout title="Login">
-  <SiteHeader />
-  <main class="flex flex-col justify-center">
-    <h1>Inicia sesion</h1>
-    <a href="/login/discord">Discord</a>
-  </main>
+  <PageMain class="min-h-[calc(100%-8rem)] items-center justify-center pb-16">
+    <header class="my-4 space-y-4">
+      <h1 class="flex gap-x-4 text-4xl font-bold leading-none">Log in</h1>
+    </header>
+
+    <p class="text-2xl">with <a href="/login/discord" class="font-semibold underline">Discord</a></p>
+  </PageMain>
 </Layout>

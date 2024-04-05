@@ -1,5 +1,5 @@
 ---
-import { Menu } from 'lucide-astro';
+import IconMenu from '@/assets/icons/menu.svg?raw';
 import SiteLogo from './SiteLogo.astro';
 import IconLogin from '@/assets/icons/log-in.svg?raw';
 
@@ -14,7 +14,7 @@ const { user } = Astro.locals;
   <div class="navbar bg-base-100/[0.965]">
     <div class="w-1/5 flex-none">
       <button class="btn btn-square btn-ghost hidden">
-        <Menu class="size-5" />
+        <div set:html={IconMenu} class="size-5" />
       </button>
       <a href="/" class="btn btn-ghost text-xl" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>
         <SiteLogo class="size-10" />

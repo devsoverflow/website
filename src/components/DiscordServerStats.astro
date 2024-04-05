@@ -1,0 +1,8 @@
+---
+import ServerStats from '@/components/ServerStats.svelte';
+import { getServerStats } from '@/server/dsserver';
+
+const stats = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
+---
+
+<ServerStats stats={stats} client:load />

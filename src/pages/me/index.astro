@@ -2,7 +2,6 @@
 import IconCalendar from '@/assets/icons/calendar.svg?raw';
 import LogoShowcase from '@/components/PLogo/LogoShowcase.svelte';
 import PageMain from '@/components/PageMain.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
 import Layout from '@/layouts/Layout.astro';
 import { ProgrammingLanguage, UserProgrammingLanguage, db, eq } from 'astro:db';
 
@@ -30,8 +29,6 @@ for (const logo of logos_all) {
 ---
 
 <Layout title="Devs Overflow">
-  <SiteHeader />
-
   <PageMain class="pb-16">
     <header class="my-4 space-y-4">
       <h1 class="flex gap-x-4 text-4xl font-bold leading-none">My account</h1>
