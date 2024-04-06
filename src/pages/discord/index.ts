@@ -1,4 +1,4 @@
-import { DISCORD_INVITE_LINK } from '@/configs/index';
+import { DISCORD_INVITE_LINK } from '@/lib/configs/index';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ redirect }) => {

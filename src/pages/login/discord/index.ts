@@ -1,4 +1,4 @@
-import { discord, set_redirect_to_cookie } from '@/server/auth';
+import { discord, set_redirect_to_cookie } from '@/lib/server/auth';
 import { generateState } from 'arctic';
 import type { APIContext } from 'astro';
 

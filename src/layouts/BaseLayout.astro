@@ -1,14 +1,14 @@
 ---
-import LogoGame from '@/components/PLogo/LogoGame.svelte';
-import SiteFooter from '@/components/SiteFooter.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
-import '../global.postcss';
-import SEO from '@/components/SEO.astro';
+import LogoGame from '@/lib/comps/LogoGame/LogoGame.svelte';
+import SEO from '@/lib/comps/SEO.astro';
+import SiteFooter from '@/lib/comps/SiteFooter.astro';
+import SiteHeader from '@/lib/comps/SiteHeader.astro';
 import type { ComponentProps } from 'astro/types';
+import '../global.postcss';
 
 type Props = {
   seo: ComponentProps<typeof SEO>;
-}
+};
 
 const seo = Astro.props.seo ?? {};
 ---
@@ -56,4 +56,4 @@ const seo = Astro.props.seo ?? {};
   .page-scroll::-webkit-scrollbar-thumb:hover {
     background-color: hsl(0, 100%, 50%, 0.8);
   }
-</style>
+</style>  

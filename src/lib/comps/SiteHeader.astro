@@ -1,7 +1,7 @@
 ---
-import IconMenu from '@/assets/icons/menu.svg?raw';
+import IconMenu from '@/lib/assets/icons/menu.svg?raw';
 import SiteLogo from './SiteLogo.astro';
-import IconLogin from '@/assets/icons/log-in.svg?raw';
+import IconLogin from '@/lib/assets/icons/log-in.svg?raw';
 
 const { user } = Astro.locals;
 ---
@@ -23,9 +23,12 @@ const { user } = Astro.locals;
     </div>
     <div class="flex w-3/5 flex-1 justify-center">
       <nav>
-        <ul class="flex gap-4">
+        <ul class="flex gap-2">
           <li>
             <a href="/discord" target="_blank" class="btn btn-ghost">Discord Server</a>
+          </li>
+          <li>
+            <a href="/showcase" class="btn btn-ghost">Showcase</a>
           </li>
         </ul>
       </nav>

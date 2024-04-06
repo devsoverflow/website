@@ -1,8 +1,8 @@
 ---
-import PageMain from '@/components/PageMain.astro';
-import { prog_langs } from '@/configs/prog_langs';
 import AppLayout from '@/layouts/AppLayout.astro';
-import { getServerStats } from '@/server/dsserver';
+import PageMain from '@/lib/comps/PageMain.astro';
+import { prog_langs } from '@/lib/configs/prog_langs';
+import { getServerStats } from '@/lib/server/dsserver';
 
 const res = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
 
@@ -21,7 +21,7 @@ console.log(res);
   }}
 >
   <PageMain>
-    <ul class="flex flex-wrap justify-center" >
+    <ul class="flex flex-wrap justify-center">
       {
         prog_langs.map((lang) => (
           <li class="m-4 rounded-lg border-2 bg-neutral-500/25 p-4 shadow-md" style={`border-color: ${lang.color}`}>

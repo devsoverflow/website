@@ -1,6 +1,6 @@
 ---
-import ServerStats from '@/components/ServerStats.svelte';
-import { getServerStats } from '@/server/dsserver';
+import ServerStats from '@/lib/comps/ServerStats.svelte';
+import { getServerStats } from '@/lib/server/dsserver';
 
 const stats = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
 ---

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import IconInfo from '@/assets/icons/info.svg?raw';
-  import type { ProgLang } from '@/configs/prog_langs';
+  import IconInfo from '@/lib/assets/icons/info.svg?raw';
+  import type { ProgLang } from '@/lib/configs/prog_langs';
   import { slide } from 'svelte/transition';
   import { hover3d } from './hover3d_effect';
 

@@ -1,4 +1,4 @@
-import { prog_langs } from '@/configs/prog_langs';
+import { prog_langs } from '@/lib/configs/prog_langs';
 import { ProgrammingLanguage, db } from 'astro:db';
 
 /**

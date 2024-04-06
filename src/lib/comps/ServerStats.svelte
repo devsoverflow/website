@@ -1,11 +1,11 @@
 <script lang="ts">
-  // import IconBot from '@/assets/icons/bot.svg?raw';
-  import IconServerOff from '@/assets/icons/server-off.svg?raw';
-  import IconUserOnline from '@/assets/icons/user-online.svg?raw';
-  import IconUserPlus from '@/assets/icons/user-plus.svg?raw';
-  import IconUser from '@/assets/icons/user.svg?raw';
-  import IconVolume2 from '@/assets/icons/volume-2.svg?raw';
-  import type { TServerStats } from '@/server/dsserver';
+  // import IconBot from '@/lib/assets/icons/bot.svg?raw';
+  import IconServerOff from '@/lib/assets/icons/server-off.svg?raw';
+  import IconUserOnline from '@/lib/assets/icons/user-online.svg?raw';
+  import IconUserPlus from '@/lib/assets/icons/user-plus.svg?raw';
+  import IconUser from '@/lib/assets/icons/user.svg?raw';
+  import IconVolume2 from '@/lib/assets/icons/volume-2.svg?raw';
+  import type { TServerStats } from '@/lib/server/dsserver';
   import { onMount } from 'svelte';
   import { fly } from 'svelte/transition';
 

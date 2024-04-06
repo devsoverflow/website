@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { prog_langs, type ProgLang } from '@/configs/prog_langs';
-  import { plogos_found } from '@/stores/plogos';
+  import { prog_langs, type ProgLang } from '@/lib/configs/prog_langs';
+  import { plogos_found } from '@/lib/stores/plogos';
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
 

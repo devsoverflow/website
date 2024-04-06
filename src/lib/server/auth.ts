@@ -1,4 +1,4 @@
-import { DEPLOY_URL } from '@/configs/index';
+import { DEPLOY_URL } from '@/lib/configs/index';
 import { Discord } from 'arctic';
 import type { APIContext } from 'astro';
 import { db, Session, User } from 'astro:db';

@@ -1,4 +1,4 @@
-import { discord, extract_redirect_to_cookie, lucia } from '@/server/auth';
+import { discord, extract_redirect_to_cookie, lucia } from '@/lib/server/auth';
 import { OAuth2RequestError } from 'arctic';
 import type { APIContext } from 'astro';
 import { User, db, eq } from 'astro:db';
