@@ -1,13 +1,18 @@
 ---
 import PageMain from '@/components/PageMain.astro';
-import Layout from '@/layouts/Layout.astro';
+import AppLayout from '@/layouts/AppLayout.astro';
 
 if (Astro.locals.user) {
   return Astro.redirect('/');
 }
 ---
 
-<Layout title="Login">
+<AppLayout
+  seo={{
+    title: 'Log in : Devs Overflow',
+    description: 'Log in to your account to access all the available features in Devs Overflow.'
+  }}
+>
   <PageMain class="min-h-[calc(100%-8rem)] items-center justify-center pb-16">
     <header class="my-4 space-y-4">
       <h1 class="flex gap-x-4 text-4xl font-bold leading-none">Log in</h1>
@@ -15,4 +20,4 @@ if (Astro.locals.user) {
 
     <p class="text-2xl">with <a href="/login/discord" class="font-semibold underline">Discord</a></p>
   </PageMain>
-</Layout>
+</AppLayout>

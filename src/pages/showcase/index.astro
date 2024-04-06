@@ -1,0 +1,27 @@
+---
+import PageMain from '@/components/PageMain.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const allPosts = await getCollection('showcase');
+---
+
+<BaseLayout
+  seo={{
+    title: 'Comunity Showcase : Devs Overflow',
+    description: 'A collection of awesome projects built by the Devs Overflow community members.'
+  }}
+>
+   
+  <PageMain class="">
+  <p>This is where I will post about my journey learning Astro.</p>
+  <ul class="text-white">
+    {
+      allPosts.map((post) => (
+        <li>
+          <a href={post.slug}>{post.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+  </PageMain>
+</BaseLayout>

@@ -1,0 +1,112 @@
+---
+type OpenGraph = {
+  title: string;
+  type?: string;
+  image: string;
+  image_alt: string;
+  url?: URL | string;
+};
+
+type OpenGraphOptional = {
+  site_name?: string;
+  description?: 'description' | (string & {});
+  locale?: string;
+  locale_alternate?: string[];
+  determiner?: string;
+  audio?: string;
+  video?: string;
+};
+
+type OpenGraphImage = {
+  url_secure?: URL | string;
+  type?: string;
+  width: number;
+  height: number;
+};
+
+type OpenGraphArticle = {
+  published_time: string;
+  modified_time?: string;
+  expiration_time?: string;
+  authors?: string[];
+  section?: string;
+  tags?: string[];
+};
+
+export interface Props {
+  title?: string;
+  title_template?: string;
+  title_default?: string;
+  charset?: string;
+  description?: string;
+  canonical?: URL | string;
+  nofollow?: boolean;
+  noindex?: boolean;
+  icon?: URL | string;
+  languageAlternates?: {
+    href: URL | string;
+    hrefLang: string;
+  }[];
+  og?: OpenGraph;
+  og_optional?: OpenGraphOptional;
+  og_image?: OpenGraphImage;
+  og_article?: OpenGraphArticle;
+}
+
+const charset = Astro.props.charset || 'UTF-8';
+let final_title = Astro.props.title_default ?? '';
+if (Astro.props.title) {
+  if (Astro.props.title_template) {
+    final_title = Astro.props.title_template.replace(/%s/g, final_title);
+  } else {
+    final_title = Astro.props.title;
+  }
+}
+const icon = Astro.props.icon ?? '/favicon.png';
+const robots = `${Astro.props.noindex ? 'noindex' : 'index'}, ${Astro.props.nofollow ? 'nofollow' : 'follow'}`;
+const og = Astro.props.og ?? ({} as OpenGraph);
+const og_title = og?.title || final_title;
+const og_type = og.type ?? (Astro.props.og_article ? 'article' : 'website');
+const og_image = Astro.props.og_image ?? ({} as OpenGraphImage);
+const og_optional = Astro.props.og_optional ?? ({} as OpenGraphOptional);
+const og_article = Astro.props.og_article ?? ({} as OpenGraphArticle);
+---
+
+<meta charset={charset} />
+<link rel="canonical" href={Astro.props.canonical || Astro.url.href} />
+<title>{final_title}</title>
+{Astro.props.description ? <meta name="description" content={Astro.props.description} /> : null}
+<link rel="icon" href={icon} />
+<meta name="robots" content={robots} />
+<meta name="generator" content={Astro.generator} />
+<meta property="og:title" content={og_title} />
+<meta property="og:type" content={og_type} />
+{og?.url ? <meta property="og:url" content={og.url} /> : null}
+{og?.image ? <meta property="og:image" content={og.image} /> : null}
+{og?.image_alt ? <meta property="og:image:alt" content={og.image_alt} /> : null}
+{og_image.url_secure ? <meta property="og:image:secure_url" content={og_image.url_secure} /> : null}
+{og_image.type ? <meta property="og:image:type" content={og_image.type} /> : null}
+{og_image.width ? <meta property="og:image:width" content={og_image.width.toString()} /> : null}
+{og_image.height ? <meta property="og:image:height" content={og_image.height.toString()} /> : null}
+{
+  og_optional.description ? (
+    <meta
+      property="og:description"
+      content={og_optional.description === 'description' ? Astro.props.description : og_optional.description}
+    />
+  ) : null
+}
+<meta property="og:determiner" content={og_optional.determiner ?? 'auto'} />
+{og_optional.locale ? <meta property="og:locale" content={og_optional.locale} /> : null}
+{og_optional.locale_alternate?.map((locale: string) => <meta property="og:locale:alternate" content={locale} />)}
+{og_optional.site_name ? <meta property="og:site_name" content={og_optional.site_name} /> : null}
+{og_article.published_time ? <meta property="article:published_time" content={og_article.published_time} /> : null}
+{og_article.modified_time ? <meta property="article:modified_time" content={og_article.modified_time} /> : null}
+{og_article.expiration_time ? <meta property="article:expiration_time" content={og_article.expiration_time} /> : null}
+{
+  og_article.authors
+    ? og_article.authors.map((author: string) => <meta property="article:author" content={author} />)
+    : null
+}
+{og_article.section ? <meta property="article:section" content={og_article.section} /> : null}
+{og_article.tags ? og_article.tags.map((tag: string) => <meta property="article:tag" content={tag} />) : null}

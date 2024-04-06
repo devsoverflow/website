@@ -2,10 +2,11 @@
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
-    extend: {},
+    extend: {}
   },
   plugins: [
-    require("daisyui"),
+    require("@tailwindcss/typography"),
+    require("daisyui")
   ],
   daisyui: {
     logs: false,
@@ -20,9 +21,9 @@ export default {
           "info": "#3b82f6",
           "success": "#84cc16",
           "warning": "#f97316",
-          "error": "#ef4444",
-        },
-      },
-    ],
-  },
+          "error": "#ef4444"
+        }
+      }
+    ]
+  }
 }

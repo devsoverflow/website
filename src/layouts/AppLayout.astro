@@ -1,0 +1,13 @@
+---
+import type { ComponentProps } from 'astro/types';
+import BaseLayout from './BaseLayout.astro';
+
+type Props = {
+  seo: ComponentProps<typeof BaseLayout>['seo'];
+};
+---
+
+<BaseLayout seo={Astro.props.seo}>
+  <slot name="head" slot="head" />
+  <slot />
+</BaseLayout>

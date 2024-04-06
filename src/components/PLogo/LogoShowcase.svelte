@@ -77,7 +77,7 @@
           in:receive={{ key: logo.id }}
           out:send={{ key: logo.id }}
           animate:flip={{ duration: 200 }}
-          class="w-48 md:w-56"
+          class="w-48"
         >
           <LogoCard {logo} found count={logo.count} />
         </li>
@@ -92,7 +92,7 @@
           in:receive={{ key: logo.id }}
           out:send={{ key: logo.id }}
           animate:flip={{ duration: 200 }}
-          class="w-48 md:w-56"
+          class="w-48"
         >
           <LogoCard {logo} />
         </li>

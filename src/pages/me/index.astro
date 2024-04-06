@@ -2,7 +2,7 @@
 import IconCalendar from '@/assets/icons/calendar.svg?raw';
 import LogoShowcase from '@/components/PLogo/LogoShowcase.svelte';
 import PageMain from '@/components/PageMain.astro';
-import Layout from '@/layouts/Layout.astro';
+import AppLayout from '@/layouts/AppLayout.astro';
 import { ProgrammingLanguage, UserProgrammingLanguage, db, eq } from 'astro:db';
 
 if (!Astro.locals.user) {
@@ -28,7 +28,12 @@ for (const logo of logos_all) {
 }
 ---
 
-<Layout title="Devs Overflow">
+<AppLayout
+  seo={{
+    title: 'My account : Devs Overflow',
+    description: 'View and manage your account information and programming language logos.'
+  }}
+>
   <PageMain class="pb-16">
     <header class="my-4 space-y-4">
       <h1 class="flex gap-x-4 text-4xl font-bold leading-none">My account</h1>
@@ -53,4 +58,4 @@ for (const logo of logos_all) {
 
     <LogoShowcase logosFound={logos_found} client:load />
   </PageMain>
-</Layout>
+</AppLayout>

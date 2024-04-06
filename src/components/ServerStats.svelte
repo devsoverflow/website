@@ -33,12 +33,12 @@
         {
           name: 'Online members',
           value: stats.members_online,
-          icon: IconVolume2
+          icon: IconUserOnline
         },
         {
           name: 'Connected members',
           value: stats.members_connected,
-          icon: IconUserOnline
+          icon: IconVolume2
         },
         {
           name: "Week's new members",

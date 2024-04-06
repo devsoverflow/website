@@ -3,23 +3,22 @@ import LogoGame from '@/components/PLogo/LogoGame.svelte';
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import '../global.postcss';
+import SEO from '@/components/SEO.astro';
+import type { ComponentProps } from 'astro/types';
 
-interface Props {
-  title: string;
+type Props = {
+  seo: ComponentProps<typeof SEO>;
 }
 
-const { title } = Astro.props;
+const seo = Astro.props.seo ?? {};
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href="/favicon.png" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <SEO {...seo} />
+    <slot name="head" />
   </head>
   <body data-theme="devsoverflow" class="overflow-hidden">
     <div class="page-scroll relative h-full overflow-y-auto">

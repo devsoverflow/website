@@ -1,6 +1,7 @@
 ---
+import PageMain from '@/components/PageMain.astro';
 import { prog_langs } from '@/configs/prog_langs';
-import Layout from '@/layouts/Layout.astro';
+import AppLayout from '@/layouts/AppLayout.astro';
 import { getServerStats } from '@/server/dsserver';
 
 const res = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
@@ -8,14 +9,26 @@ const res = await getServerStats(import.meta.env.DISCORD_SERVER_ID);
 console.log(res);
 ---
 
-<Layout title="Devs Overflow">
-  <ul class="flex flex-wrap justify-center">
-    {
-      prog_langs.map((lang) => (
-        <li class="m-4 rounded-lg border-2 bg-neutral-500/25 p-4 shadow-md" style={`border-color: ${lang.color}`}>
-          <img src={lang.icon} alt={lang.name} class="mx-auto h-16 w-16" />
-        </li>
-      ))
+<AppLayout
+  seo={{
+    title: 'Empty : Devs Overflow',
+    description: 'Empty page for testing purposes',
+    og_optional: {
+      site_name: 'Devs Overflow',
+      description: 'description',
+      locale: 'en_US'
     }
-  </ul>
-</Layout>
+  }}
+>
+  <PageMain>
+    <ul class="flex flex-wrap justify-center" >
+      {
+        prog_langs.map((lang) => (
+          <li class="m-4 rounded-lg border-2 bg-neutral-500/25 p-4 shadow-md" style={`border-color: ${lang.color}`}>
+            <img src={lang.icon} alt={lang.name} class="mx-auto h-16 w-16" />
+          </li>
+        ))
+      }
+    </ul>
+  </PageMain>
+</AppLayout>

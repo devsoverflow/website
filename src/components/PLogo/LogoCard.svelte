@@ -29,8 +29,7 @@
           href={logo.homepage}
           target="_blank"
           rel="noopener noreferrer"
-          class="flex font-semibold underline hover:underline-offset-4"
-          ><span class="hover:white size-full">{@html IconInfo}</span></a
+          class="flex size-5 font-semibold transition-transform hover:scale-105">{@html IconInfo}</a
         >
       </div>
       {#key count}
