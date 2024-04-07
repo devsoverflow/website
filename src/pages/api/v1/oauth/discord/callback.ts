@@ -98,6 +98,7 @@ export async function GET(context: APIContext): Promise<Response> {
     context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     return context.redirect(redirect_to);
   } catch (e) {
+    console.log('Error handling Discord OAuth callback:', e);
     if (e instanceof OAuth2RequestError) {
       // invalid code
       return new Response(null, {
