@@ -12,3 +12,7 @@ export const POST_REACTION_EMOTES = new Set([
   '🧉',
   '🧨'
 ]);
+
+export const SITE_COLOR = '#96262a';
+
+export const SITE_NAME = 'Devs Overflow';

@@ -1,13 +1,13 @@
 ---
-type OpenGraph = {
-  title: string;
+export type OpenGraph = {
+  title?: string;
   type?: string;
-  image: string;
-  image_alt: string;
+  image?: string;
+  image_alt?: string;
   url?: URL | string;
 };
 
-type OpenGraphOptional = {
+export type OpenGraphOptional = {
   site_name?: string;
   description?: 'description' | (string & {});
   locale?: string;
@@ -43,6 +43,7 @@ export interface Props {
   nofollow?: boolean;
   noindex?: boolean;
   icon?: URL | string;
+  theme_color?: string;
   languageAlternates?: {
     href: URL | string;
     hrefLang: string;
@@ -57,7 +58,7 @@ const charset = Astro.props.charset || 'UTF-8';
 let final_title = Astro.props.title_default ?? '';
 if (Astro.props.title) {
   if (Astro.props.title_template) {
-    final_title = Astro.props.title_template.replace(/%s/g, final_title);
+    final_title = Astro.props.title_template.replace(/%s/g, Astro.props.title);
   } else {
     final_title = Astro.props.title;
   }
@@ -79,6 +80,7 @@ const og_article = Astro.props.og_article ?? ({} as OpenGraphArticle);
 <link rel="icon" href={icon} />
 <meta name="robots" content={robots} />
 <meta name="generator" content={Astro.generator} />
+{Astro.props.theme_color ? <meta name="theme-color" content={Astro.props.theme_color} /> : null}
 <meta property="og:title" content={og_title} />
 <meta property="og:type" content={og_type} />
 {og?.url ? <meta property="og:url" content={og.url} /> : null}

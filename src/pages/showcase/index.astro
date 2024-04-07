@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import AppLayout from '@/layouts/AppLayout.astro';
 import IconBriefcase from '@/lib/assets/icons/briefcase.svg?raw';
 import PageFooter from '@/lib/comps/PageFooter.astro';
 import PageHeader from '@/lib/comps/PageHeader.astro';
@@ -21,9 +21,9 @@ function is_new(publish: Date) {
 }
 ---
 
-<BaseLayout
+<AppLayout
   seo={{
-    title: 'Comunity Showcase : Devs Overflow',
+    title: 'Comunity Showcase',
     description: 'A collection of awesome projects built by the Devs Overflow community members.'
   }}
 >
@@ -57,4 +57,4 @@ function is_new(publish: Date) {
       </div>
     </PageFooter>
   </PageMain>
-</BaseLayout>
+</AppLayout>

@@ -1,13 +1,51 @@
 ---
-import type { ComponentProps } from 'astro/types';
+import logo from '@/lib/assets/logo.png';
+import type { OpenGraph, OpenGraphOptional, Props as SEOProps } from '@/lib/comps/SEO.astro';
+import { SITE_COLOR, SITE_NAME } from '@/lib/configs/index.js';
 import BaseLayout from './BaseLayout.astro';
 
 type Props = {
-  seo: ComponentProps<typeof BaseLayout>['seo'];
+  seo: Omit<SEOProps, 'og' | 'og_optional' | 'title' | 'title_default' | 'title_template'> & {
+    title: 'site_name' | (string & {});
+    title_template?: 'raw_title' | (string & {});
+    og?: Pick<OpenGraph, 'image' | 'image_alt' | 'title'>;
+    og_optional?: Pick<OpenGraphOptional, 'description' | 'locale'>;
+  };
 };
+
+const raw_seo = Astro.props.seo ?? {};
+
+const seo = {
+  title: raw_seo.title === 'site_name' ? SITE_NAME : raw_seo.title,
+  title_template:
+    raw_seo.title === 'site_name' || raw_seo.title_template === 'raw_title'
+      ? undefined
+      : raw_seo.title_template ?? '%s : ' + SITE_NAME,
+  charset: raw_seo.charset,
+  description: raw_seo.description,
+  theme_color: raw_seo.theme_color ?? SITE_COLOR,
+  canonical: raw_seo.canonical,
+  nofollow: raw_seo.nofollow,
+  noindex: raw_seo.noindex,
+  icon: raw_seo.icon,
+  languageAlternates: raw_seo.languageAlternates,
+  og: {
+    image: raw_seo.og?.image ?? logo.src,
+    image_alt: raw_seo.og?.image_alt ?? SITE_NAME + ' logo',
+    title: raw_seo.og?.title,
+    url: Astro.url.href
+  },
+  og_optional: {
+    description: raw_seo.og_optional?.description ?? raw_seo.description,
+    site_name: SITE_NAME,
+    locale: raw_seo.og_optional?.locale
+  },
+  og_image: raw_seo.og_image,
+  og_article: raw_seo.og_article
+} as SEOProps;
 ---
 
-<BaseLayout seo={Astro.props.seo}>
+<BaseLayout seo={seo}>
   <slot name="head" slot="head" />
   <slot />
 </BaseLayout>
