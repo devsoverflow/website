@@ -1,0 +1,67 @@
+---
+import ShowcasePostLayout from '@/layouts/ShowcasePostLayout.astro';
+import PostReactions from '@/lib/comps/PostReactions.svelte';
+import { handleCommunityProjectReaction } from '@/lib/server/api.js';
+import { getEntryBySlug } from 'astro:content';
+import { db, desc, eq, ShowcasePostReaction, sql } from 'astro:db';
+
+if (!Astro.params.slug) {
+  return new Response(null, {
+    status: 404,
+    statusText: 'Not Found'
+  });
+}
+
+if (Astro.request.method === 'POST') {
+  const enhanced = Astro.request.headers.get('Content-Type') === 'application/json';
+  const res = await handleCommunityProjectReaction(Astro.request, Astro.locals);
+  if (enhanced) {
+    return new Response(null, res);
+  }
+  if (res.status) {
+    Astro.response.status = res.status;
+  }
+  if (res.statusText) {
+    Astro.response.statusText = res.statusText;
+  }
+}
+
+const entry = await getEntryBySlug('showcase', Astro.params.slug);
+if (!entry) {
+  return new Response(null, {
+    status: 404,
+    statusText: `Not Found - Showcase post with slug "${Astro.params.slug}" not found`
+  });
+}
+
+const [{ Content }, stored_reactions] = await Promise.all([
+  entry.render(),
+  db
+    .select({
+      reaction: ShowcasePostReaction.reaction,
+      count: sql<number>`COUNT(*)`,
+      reacted: sql<number>`COUNT(*) FILTER (WHERE ${ShowcasePostReaction.userId} = ${Astro.locals.user?.id})`
+    })
+    .from(ShowcasePostReaction)
+    .where(eq(ShowcasePostReaction.postId, entry.id))
+    .groupBy(ShowcasePostReaction.reaction)
+    .orderBy(desc(sql`COUNT(*)`))
+]);
+
+const reactions: Record<string, any> = {};
+for (const reaction of stored_reactions) {
+  reactions[reaction.reaction] = {
+    reaction: reaction.reaction,
+    count: reaction.count,
+    reacted: reaction.reacted
+  };
+}
+---
+
+<ShowcasePostLayout frontmatter={entry.data}>
+  <Content />
+  <Fragment slot="after-links">
+    <hr />
+    <PostReactions client:load reactions={reactions} slug={entry.slug} />
+  </Fragment>
+</ShowcasePostLayout>

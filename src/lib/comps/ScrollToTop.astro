@@ -1,0 +1,9 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'button'>;
+---
+
+<button onclick="document.querySelector('body>div')?.scrollTo({ top: 0, behavior: 'smooth' });" {...Astro.props}>
+  <slot />
+</button>

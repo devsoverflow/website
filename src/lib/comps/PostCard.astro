@@ -1,0 +1,43 @@
+---
+import IconImageOff from '@/lib/assets/icons/image-off.svg?raw';
+
+type Props = {
+  href: string;
+  title: string;
+  description: string;
+  image?: {
+    url: string;
+    alt: string;
+  };
+  image_svg?: string;
+  tags?: string[];
+  is_new: boolean;
+  class?: string;
+};
+
+const { title, description, image,image_svg: image_fallback, tags = [], href, is_new = false, class: className = '' } = Astro.props;
+---
+
+<li class={"w-full " + className}>
+  <a
+    href={href}
+    class="card card-bordered h-full border-black bg-base-300 shadow-xl shadow-black/80 transition-transform hover:scale-105"
+  >
+
+    <figure class="aspect-video [&>svg]:h-1/2">
+      <slot name="image">
+        {image ? <img src={image.url} alt={image.alt} /> : <Fragment set:html={image_fallback ?? IconImageOff} />}
+      </slot>
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title">
+        {title}
+        {is_new && <div class="badge badge-accent">NEW</div>}
+      </h2>
+      <p>{description}</p>
+      <div class="card-actions justify-end">
+        {tags.map((tag) => <div class="badge badge-outline">{tag}</div>)}
+      </div>
+    </div>
+  </a>
+</li>

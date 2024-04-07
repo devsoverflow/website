@@ -55,11 +55,26 @@ const UserProgrammingLanguage = defineTable({
   }
 });
 
+const ShowcasePostReaction = defineTable({
+  columns: {
+    postId: column.text(),
+    userId: column.text({ references: () => User.columns.id }),
+    reaction: column.text()
+  },
+  indexes: {
+    showcase_post_reaction_idx: {
+      on: ['postId', 'userId'],
+      unique: true
+    }
+  }
+});
+
 export default defineDb({
   tables: {
     User,
     Session,
     ProgrammingLanguage,
-    UserProgrammingLanguage
+    UserProgrammingLanguage,
+    ShowcasePostReaction
   }
 });

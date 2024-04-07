@@ -1,7 +1,13 @@
 ---
-import PageMain from '@/lib/comps/PageMain.astro';
+import IconCornerRightUp from '@/lib/assets/icons/corner-right-up.svg?raw';
+import ScrollToTop from '@/lib/comps/ScrollToTop.astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+
+const language_map = {
+  en: 'English',
+  es: 'Spanish'
+};
 
 type ShowcaseCollection = CollectionEntry<'showcase'>;
 
@@ -10,6 +16,7 @@ type Props = {
 };
 
 const { frontmatter } = Astro.props;
+const updated = frontmatter.updatedDate && frontmatter.updatedDate.getTime() !== frontmatter.publishDate.getTime();
 ---
 
 <BaseLayout
@@ -23,62 +30,81 @@ const { frontmatter } = Astro.props;
       image_alt: frontmatter.image.alt
     },
     og_article: {
-      published_time: frontmatter.publishDate.toString().slice(0, 10),
-      modified_time: (frontmatter.updatedDate ?? frontmatter.publishDate).toString().slice(0, 10)
+      published_time: frontmatter.publishDate.toString().slice(4, 15),
+      modified_time: (frontmatter.updatedDate ?? frontmatter.publishDate).toString().slice(4, 15)
     },
     og_optional: {
-      site_name: 'Astro Showcase',
+      site_name: 'Devs Overflow',
       description: frontmatter.description,
       locale: 'en_US'
     }
   }}
 >
-  <PageMain class="">
-    <header>
-      <h1>{frontmatter.title}</h1>
-      <p>{frontmatter.publishDate.toString().slice(0, 10)}</p>
-      <p><em>{frontmatter.description}</em></p>
-      <p>Written by: {frontmatter.author}</p>
-      <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-      <div class="tags">
+  <main class="mx-auto flex max-w-screen-md flex-col gap-16 px-2 sm:px-4">
+    <header class="space-y-3 pt-16 text-center md:space-y-6 md:pt-24">
+      <p class="font-medium">
+        <time datetime={frontmatter.publishDate.toString()}>{frontmatter.publishDate.toString().slice(4, 15)}</time>
+        {updated ? <span class="opacity-75">(updated {frontmatter.updatedDate?.toString().slice(4, 15)})</span> : null}
+      </p>
+      <h1 class="text-pretty text-4xl font-bold">{frontmatter.title}</h1>
+      <p class="text-lg font-medium">{frontmatter.description}</p>
+      <div class="flex flex-wrap justify-center gap-2">
         {
           frontmatter.tags.map((tag) => (
-            <p class="tag">
-              <a href={`/tags/${tag}`}>{tag}</a>
-            </p>
+            <a href={`/tags/${tag}`} class="font-bold text-primary underline underline-offset-2">
+              #{tag}
+            </a>
           ))
         }
       </div>
+      <p>
+        <span class="font-medium">{frontmatter.author}</span><br />
+        <span class="font-medium opacity-75">({language_map[frontmatter.language]})</span>
+      </p>
     </header>
 
-    <div class="prose">
+    {
+      frontmatter.image ? (
+        <div class="-mx-2 overflow-hidden rounded-lg sm:-mx-4 lg:-mx-8">
+          <img src={frontmatter.image.url} alt={frontmatter.image.alt} class="w-full object-contain" />
+        </div>
+      ) : null
+    }
+
+    <div class="prose max-w-full">
       <slot />
+      {
+        frontmatter.links ? (
+          <>
+            <h2>Links</h2>
+            <nav>
+              <ul class="flex gap-8 marker:text-[theme(colors.primary)]">
+                {Object.keys(frontmatter.links).map((label) => {
+                  // @ts-expect-error
+                  const url = frontmatter.links[label];
+                  if (!url) {
+                    return null;
+                  }
+                  return (
+                    <li class="">
+                      <a href={url} class="font-semibold capitalize underline-offset-2">
+                        {label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </>
+        ) : null
+      }
+      <slot name="after-links" />
     </div>
 
-    <footer>
-      <nav>
-        <ul></ul>
-      </nav>
+    <footer class="flex flex-col gap-y-3 pb-16 md:gap-y-6">
+      <div class="ml-auto">
+        <ScrollToTop class="btn btn-ghost">Back to top <div set:html={IconCornerRightUp} /></ScrollToTop>
+      </div>
     </footer>
-  </PageMain>
+  </main>
 </BaseLayout>
-
-<style>
-  a {
-    color: #00539f;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    margin: 0.25em;
-    border: dotted 1px #a1a1a1;
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    font-size: 1.15em;
-    background-color: #f8fcfd;
-  }
-</style>

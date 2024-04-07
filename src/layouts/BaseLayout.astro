@@ -31,10 +31,9 @@ const seo = Astro.props.seo ?? {};
   </body>
 </html>
 
-<style>
+<style is:global>
   .page-scroll {
     --scrollbar-size: 6px;
-    transition: all 0.3s ease;
   }
 
   @media screen and (min-width: 1024px) {
@@ -45,6 +44,7 @@ const seo = Astro.props.seo ?? {};
 
   .page-scroll::-webkit-scrollbar {
     width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
     border-left: 1px solid black;
   }
 
