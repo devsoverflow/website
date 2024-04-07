@@ -13,7 +13,7 @@ interface DiscordUser {
   premium_type: number;
   flags: number;
   banner: string | null;
-  accent_color: number;
+  accent_color: number | null;
   global_name: string;
   avatar_decoration_data: any | null;
   banner_color: string;
@@ -32,7 +32,7 @@ function parseDiscordUser(user: DiscordUser): CustomDiscordUser {
     avatarUrl: user.avatar
       ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
       : `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`,
-    accentColor: '#' + user.accent_color.toString(16).padStart(6, '0')
+    accentColor: '#' + (user.accent_color?.toString(16).padStart(6, '0') ?? 'e64c4c')
   };
 }
 
@@ -57,7 +57,7 @@ export async function GET(context: APIContext): Promise<Response> {
     });
 
     const discordUser = parseDiscordUser(await discordUserResponse.json());
-    const dbUser = await db.select().from(User).where(eq(User.discord_id, discordUser.id)).get();
+    const dbUser = await db.select().from(User).where(eq(User.discordId, discordUser.id)).get();
 
     if (dbUser) {
       const session = await lucia.createSession(dbUser.id, {});
@@ -67,14 +67,14 @@ export async function GET(context: APIContext): Promise<Response> {
       if (
         discordUser.global_name !== dbUser.name ||
         discordUser.avatarUrl !== dbUser.avatar ||
-        discordUser.accentColor !== dbUser.accent_color
+        discordUser.accentColor !== dbUser.accentColor
       ) {
         await db
           .update(User)
           .set({
             name: discordUser.global_name,
             avatar: discordUser.avatarUrl,
-            accent_color: discordUser.accentColor
+            accentColor: discordUser.accentColor
           })
           .where(eq(User.id, dbUser.id));
       }
@@ -86,10 +86,10 @@ export async function GET(context: APIContext): Promise<Response> {
 
     await db.insert(User).values({
       id: userId,
-      discord_id: discordUser.id,
+      discordId: discordUser.id,
       username: discordUser.username,
       avatar: discordUser.avatarUrl,
-      accent_color: discordUser.accentColor,
+      accentColor: discordUser.accentColor,
       name: discordUser.global_name
     });
 

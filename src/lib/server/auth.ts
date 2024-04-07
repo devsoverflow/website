@@ -16,13 +16,13 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
     return {
       id: attributes.id,
-      discordId: attributes.discord_id,
+      discordId: attributes.discordId,
       username: attributes.username,
       name: attributes.name,
-      accentColor: attributes.accent_color,
+      accentColor: attributes.accentColor,
       avatar: attributes.avatar,
-      logosClicked: attributes.logos_clicked,
-      joinedAt: attributes.joined_at
+      joinedAt: attributes.joinedAt,
+      logosClicked: attributes.logosClicked
     };
   }
 });

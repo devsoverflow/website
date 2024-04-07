@@ -22,7 +22,7 @@ export async function POST({ locals, request }: APIContext) {
     await db
       .update(User)
       .set({
-        logos_clicked: locals.user.logosClicked + 1
+        logosClicked: locals.user.logosClicked + 1
       })
       .where(eq(User.id, locals.user.id));
 
