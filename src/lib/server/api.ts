@@ -2,6 +2,37 @@ import { POST_REACTION_EMOTES } from '@/lib/configs';
 import { getEntry } from 'astro:content';
 import { ShowcasePostReaction, db, isDbError } from 'astro:db';
 
+export function error(status: number = 400, statusText: string = 'Bad Request'): Response {
+  return new Response(null, {
+    status: status,
+    statusText: statusText
+  });
+}
+
+export function json(data: unknown, options: ResponseInit = {}): Response {
+  let body: string | null = null;
+
+  try {
+    body = JSON.stringify(data);
+    if (!options.status) {
+      options.status = 200;
+    }
+    if (!options.headers) {
+      options.headers = {} as Record<string, string>;
+    }
+    // @ts-expect-error
+    options.headers['Content-Type'] = 'application/json';
+    // @ts-expect-error
+    options.headers['Content-Length'] = body.length.toString();
+  } catch (error) {
+    console.error(error);
+    options.status = 500;
+    options.statusText = 'Internal Server Error';
+  }
+
+  return new Response(body, options);
+}
+
 export async function handleCommunityProjectReaction(request: Request, locals: App.Locals): Promise<ResponseInit> {
   if (!locals.user) {
     return {
@@ -22,8 +53,7 @@ export async function handleCommunityProjectReaction(request: Request, locals: A
       const formData = await request.formData();
       project_slug = formData.get('slug');
       reaction = formData.get('reaction');
-    }
-    else {
+    } else {
       return {
         status: 400,
         statusText: 'Bad Request - JSON body is invalid'
@@ -36,11 +66,12 @@ export async function handleCommunityProjectReaction(request: Request, locals: A
       statusText: 'Bad Request - JSON body is invalid'
     };
   }
+
   if (typeof project_slug !== 'string' || typeof reaction !== 'string' || !POST_REACTION_EMOTES.has(reaction)) {
-    return new Response(null, {
+    return {
       status: 400,
       statusText: 'Bad Request - Invalid id or reaction'
-    });
+    };
   }
 
   const project = await getEntry('showcase', project_slug);

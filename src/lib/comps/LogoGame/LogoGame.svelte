@@ -11,7 +11,7 @@
   /**
    * Rate of logo spawn in seconds
    */
-  const RATE_BASE = 1;
+  const RATE_BASE = 60;
   const RATE_UPTO_FACTOR = 1.5;
 
   const LOGO_SIZE = 96;
@@ -84,6 +84,7 @@
   let cancel_loco_click = !user;
 
   let clicks = user?.logosClicked ?? 0;
+  let global_clicks = 0;
 
   const sides = ['top', 'right', 'bottom', 'left'] as SpawnSide[];
 
@@ -234,15 +235,21 @@
     clicks += 1;
 
     if (user) {
-      fetch(`/api/v1/user/prog_langs/clicked?id=${encodeURIComponent(current_logo.data.id)}`, { method: 'POST' })
+      fetch(`/api/v1/logo_game/clicked?id=${encodeURIComponent(current_logo.data.id)}`, { method: 'POST' })
         .then((res) => {
           if (!res.ok) {
-            console.error('Failed to update user clicked logos');
             return;
           }
-          res.json().then((data) => {
-            plogos_found.setKey(current_logo.data.id, data.count);
-          });
+
+          res
+            .json()
+            .then((data) => {
+              plogos_found.setKey(current_logo.data.id, data.count);
+              global_clicks = data.general_count;
+            })
+            .catch((err) => {
+              console.error('Failed to update user clicked logos', err);
+            });
         })
         .catch((err) => {
           console.error('Failed to update user clicked logos', err);
@@ -265,6 +272,26 @@
         clearTimeout(explosionId);
       };
     }
+
+    fetch(`/api/v1/logo_game/global`)
+      .then((res) => {
+        if (!res.ok) {
+          console.error('Failed to fetch global clicks');
+          return;
+        }
+
+        res
+          .json()
+          .then((data) => {
+            global_clicks = data.total;
+          })
+          .catch((err) => {
+            console.error('Failed to update user clicked logos', err);
+          });
+      })
+      .catch((err) => {
+        console.error('Failed to update user clicked logos', err);
+      });
 
     let clear_touch_id: ReturnType<typeof setTimeout>;
     function on_mouse_move(e: MouseEvent) {
@@ -395,7 +422,7 @@
 <div class="pointer-events-none fixed left-0 top-0 z-50 h-full w-[calc(100%-var(--scrollbar-size,0))] overflow-hidden">
   <div class="absolute bottom-2 right-2 flex items-end">
     {#if import.meta.env.DEV}
-      <div class="">
+      <div class="mr-2">
         <button
           on:click={() => {
             schedule_next_logo();
@@ -409,11 +436,30 @@
       <!-- <code class="pointer-events-none absolute bottom-0 left-0 text-sm"><pre>{JSON.stringify({ current_logo, cursor }, null, 2)}</pre></code> -->
     {/if}
     {#if clicks > 0}
-      <p class="inline-block text-end text-2xl font-bold !leading-none sm:text-4xl">
-        <span class="inline-block font-mono text-[1em]">&nbsp;</span><span class="text-[0.5em]">X </span>{#key clicks}
-          <span in:slide={{ axis: 'y' }} class="inline-block font-mono text-[1em]">{clicks}</span>
-        {/key}
-      </p>
+      <div class="dropdown dropdown-end dropdown-top select-none text-end text-2xl font-bold sm:text-4xl">
+        <div
+          tabindex="-1"
+          role="button"
+          title="Clicked logos"
+          class="pointer-events-auto flex h-8 items-end px-1 ring-1 sm:h-10"
+        >
+          {#key clicks}
+            <span in:slide={{ axis: 'y', duration: 300 }} class="inline-block font-mono">
+              {clicks}
+            </span>
+          {/key}
+        </div>
+        {#if global_clicks}
+          <div
+            class="dropdown-content flex w-max flex-col rounded-box bg-base-300 p-4 text-neutral-100 shadow-lg shadow-black/80 ring-black/80"
+          >
+            <span class="text-sm font-semibold">Community clicked logos</span>
+            <span class="mt-1 font-mono leading-none">
+              {global_clicks}
+            </span>
+          </div>
+        {/if}
+      </div>
     {/if}
   </div>
 </div>

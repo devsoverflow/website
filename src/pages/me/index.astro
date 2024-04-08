@@ -4,7 +4,7 @@ import IconCalendar from '@/lib/assets/icons/calendar.svg?raw';
 import LogoShowcase from '@/lib/comps/LogoGame/LogoShowcase.svelte';
 import PageHeader from '@/lib/comps/PageHeader.astro';
 import PageMain from '@/lib/comps/PageMain.astro';
-import { ProgrammingLanguage, UserProgrammingLanguage, db, eq } from 'astro:db';
+import { ProgrammingLanguage, UserProgrammingLanguage, and, db, eq } from 'astro:db';
 
 if (!Astro.locals.user) {
   return Astro.redirect('/login/discord?redirect_to=/me');
@@ -18,7 +18,13 @@ const logos_all = await db
     logo_count: UserProgrammingLanguage.count
   })
   .from(ProgrammingLanguage)
-  .leftJoin(UserProgrammingLanguage, eq(ProgrammingLanguage.id, UserProgrammingLanguage.programmingLanguageId));
+  .leftJoin(
+    UserProgrammingLanguage,
+    and(
+      eq(ProgrammingLanguage.id, UserProgrammingLanguage.programmingLanguageId),
+      eq(UserProgrammingLanguage.userId, user.id)
+    )
+  );
 
 const logos_found: Record<string, number> = {};
 
