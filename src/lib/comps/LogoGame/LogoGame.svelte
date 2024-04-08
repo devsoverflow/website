@@ -81,6 +81,7 @@
   let exploding = false;
   let explosionId: ReturnType<typeof setTimeout>;
   let audio: HTMLAudioElement;
+  let cancel_loco_click = !user;
 
   let clicks = user?.logosClicked ?? 0;
 
@@ -216,7 +217,8 @@
 
   function on_loco_click(e: Event) {
     e.preventDefault();
-    if (current_logo.clicked) {
+    e.stopImmediatePropagation();
+    if (current_logo.clicked || cancel_loco_click) {
       return;
     }
 
@@ -252,8 +254,16 @@
   }
 
   onMount(() => {
+    schedule_next_logo();
+
+    audio = new Audio('/prog_langs/despacito.wav');
+
     if (!user) {
-      return;
+      return () => {
+        cancelAnimationFrame(updateId);
+        clearTimeout(nextLogoId);
+        clearTimeout(explosionId);
+      };
     }
 
     let clear_touch_id: ReturnType<typeof setTimeout>;
@@ -284,18 +294,37 @@
       cursor.y = Number.MAX_SAFE_INTEGER;
     }
 
+    let ban_timeoutid: ReturnType<typeof setTimeout>;
+    let contextmenu_open = false;
+    function on_contextmenu(_e: MouseEvent) {
+      clearTimeout(ban_timeoutid);
+      contextmenu_open = true;
+      cancel_loco_click = true;
+    }
+
+    function on_click(_e: MouseEvent) {
+      if (contextmenu_open) {
+        console.warn('Keep quiet for a while...');
+        clearTimeout(ban_timeoutid);
+        ban_timeoutid = setTimeout(() => {
+          contextmenu_open = false;
+          cancel_loco_click = !user;
+        }, 1000);
+      }
+    }
+
     document.addEventListener('mousemove', on_mouse_move);
     document.addEventListener('mouseenter', on_mouse_enter);
     document.addEventListener('mouseleave', on_mouse_leave);
-
-    schedule_next_logo();
-
-    audio = new Audio('/prog_langs/despacito.wav');
+    document.addEventListener('contextmenu', on_contextmenu);
+    document.addEventListener('click', on_click);
 
     return () => {
       document.removeEventListener('mousemove', on_mouse_move);
       document.removeEventListener('mouseenter', on_mouse_enter);
       document.removeEventListener('mouseleave', on_mouse_leave);
+      document.removeEventListener('contextmenu', on_contextmenu);
+      document.removeEventListener('click', on_click);
       cancelAnimationFrame(updateId);
       clearTimeout(nextLogoId);
       clearTimeout(explosionId);
@@ -304,7 +333,7 @@
 </script>
 
 <div class="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-  {#if user && current_logo}
+  {#if current_logo}
     <div
       bind:this={logo_el}
       hidden={current_logo.clicked}
@@ -314,7 +343,12 @@
         -top-[calc(var(--size,96px)/2)]
         size-[var(--size,0px)]"
     >
-      <button on:pointerdown={on_loco_click} tabindex="-1" class="pointer-events-auto relative size-full select-none">
+      <button
+        on:pointerdown={on_loco_click}
+        tabindex="-1"
+        class="pointer-events-auto relative size-full select-none"
+        class:cursor-default={!user}
+      >
         <img src={current_logo.data.icon} alt="Logo de {current_logo.data.name}" class="size-full" draggable="false" />
       </button>
     </div>

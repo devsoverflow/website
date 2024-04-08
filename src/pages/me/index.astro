@@ -27,6 +27,17 @@ for (const logo of logos_all) {
     logos_found[logo.logo_id] = logo.logo_count;
   }
 }
+
+function formatDate(date: Date) {
+  const formater = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const parts = formater.formatToParts(date);
+  return `${parts[0]!.value} ${parts[4]!.value} ${parts[2]!.value} of ${parts[6]!.value}`;
+}
 ---
 
 <AppLayout
@@ -49,12 +60,12 @@ for (const logo of logos_all) {
           <p class="flex text-lg font-medium" title="Discord username">@{user.username}</p>
           <p class="flex text-lg font-medium" title="Date joined">
             <span class="mr-2 inline-block" set:html={IconCalendar} />
-            {user.joinedAt.toLocaleDateString()}
+            {formatDate(user.joinedAt)}
           </p>
         </div>
       </div>
     </section>
 
-    <LogoShowcase logosFound={logos_found} client:load />
+    <LogoShowcase client:load logosFound={logos_found} />
   </PageMain>
 </AppLayout>
