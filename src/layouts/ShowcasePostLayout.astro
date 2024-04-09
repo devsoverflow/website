@@ -4,11 +4,6 @@ import ScrollToTop from '@/lib/comps/ScrollToTop.astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 
-const language_map = {
-  en: 'English',
-  es: 'Spanish'
-};
-
 type ShowcaseCollection = CollectionEntry<'showcase'>;
 
 type Props = {
@@ -49,17 +44,28 @@ const updated = frontmatter.updatedDate && frontmatter.updatedDate.getTime() !==
       <h1 class="text-pretty text-4xl font-bold">{frontmatter.title}</h1>
       <p class="text-lg font-medium">{frontmatter.description}</p>
       <div class="flex flex-wrap justify-center gap-2">
-        {
+        {frontmatter.tags.map((tag) => <span class="font-bold text-primary">#{tag}</span>)}
+        <!-- {
           frontmatter.tags.map((tag) => (
             <a href={`/tags/${tag}`} class="font-bold text-primary underline underline-offset-2">
               #{tag}
             </a>
           ))
-        }
+        } -->
       </div>
-      <p>
-        <span class="font-medium">{frontmatter.author}</span><br />
-        <span class="font-medium opacity-75">({language_map[frontmatter.language]})</span>
+      <p class="font-medium">
+        {
+          frontmatter.author_url ? (
+            <a href={frontmatter.author_url} class="group">
+              @
+              <span class="underline underline-offset-2 transition-all group-hover:underline-offset-4">
+                {frontmatter.author}
+              </span>
+            </a>
+          ) : (
+            <span>@{frontmatter.author}</span>
+          )
+        }
       </p>
     </header>
 

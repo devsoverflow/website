@@ -15,15 +15,23 @@ type Props = {
   class?: string;
 };
 
-const { title, description, image,image_svg: image_fallback, tags = [], href, is_new = false, class: className = '' } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  image_svg: image_fallback,
+  tags = [],
+  href,
+  is_new = false,
+  class: className = ''
+} = Astro.props;
 ---
 
-<li class={"w-full " + className}>
+<li class={'w-full ' + className}>
   <a
     href={href}
     class="card card-bordered h-full border-black bg-base-300 shadow-xl shadow-black/80 transition-transform hover:scale-105"
   >
-
     <figure class="aspect-video [&>svg]:h-1/2">
       <slot name="image">
         {image ? <img src={image.url} alt={image.alt} /> : <Fragment set:html={image_fallback ?? IconImageOff} />}
