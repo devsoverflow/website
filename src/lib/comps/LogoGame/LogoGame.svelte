@@ -169,7 +169,7 @@
   function schedule_next_logo() {
     cancelAnimationFrame(updateId);
     clearTimeout(nextLogoId);
-    setTimeout(dropLogo, rand_range_int(RATE_BASE, RATE_BASE * RATE_UPTO_FACTOR) * 1000);
+    nextLogoId = setTimeout(dropLogo, rand_range_int(RATE_BASE, RATE_BASE * RATE_UPTO_FACTOR) * 1000);
   }
 
   function dropLogo() {
@@ -441,7 +441,7 @@
           tabindex="-1"
           role="button"
           title="Clicked logos"
-          class="pointer-events-auto flex h-8 items-end px-1 ring-1 sm:h-10"
+          class="pointer-events-auto flex h-8 items-end px-1 sm:h-10"
         >
           {#key clicks}
             <span in:slide={{ axis: 'y', duration: 300 }} class="inline-block font-mono">
@@ -451,7 +451,7 @@
         </div>
         {#if global_clicks}
           <div
-            class="dropdown-content flex w-max flex-col rounded-box bg-base-300 p-4 text-neutral-100 shadow-lg shadow-black/80 ring-black/80"
+            class="dropdown-content flex w-max flex-col rounded-box bg-base-300 p-4 text-neutral-100 shadow-lg shadow-black/80 ring-1 ring-black/80"
           >
             <span class="text-sm font-semibold">Community clicked logos</span>
             <span class="mt-1 font-mono leading-none">

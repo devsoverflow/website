@@ -36,16 +36,18 @@ if (!entry) {
 
 const [{ Content }, stored_reactions] = await Promise.all([
   entry.render(),
-  db
-    .select({
-      reaction: ShowcasePostReaction.reaction,
-      count: sql<number>`COUNT(*)`,
-      reacted: sql<number>`COUNT(*) FILTER (WHERE ${ShowcasePostReaction.userId} = ${Astro.locals.user?.id})`
-    })
-    .from(ShowcasePostReaction)
-    .where(eq(ShowcasePostReaction.postId, entry.id))
-    .groupBy(ShowcasePostReaction.reaction)
-    .orderBy(desc(sql`COUNT(*)`))
+  Astro.locals.user
+    ? db
+        .select({
+          reaction: ShowcasePostReaction.reaction,
+          count: sql<number>`COUNT(*)`,
+          reacted: sql<number>`COUNT(*) FILTER (WHERE ${ShowcasePostReaction.userId} = ${Astro.locals.user?.id})`
+        })
+        .from(ShowcasePostReaction)
+        .where(eq(ShowcasePostReaction.postId, entry.id))
+        .groupBy(ShowcasePostReaction.reaction)
+        .orderBy(desc(sql`COUNT(*)`))
+    : []
 ]);
 
 const reactions: Record<string, any> = {};

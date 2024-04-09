@@ -21,7 +21,7 @@ const seo = Astro.props.seo ?? {};
     <slot name="head" />
   </head>
   <body data-theme="devsoverflow" class="overflow-hidden">
-    <div class="page-scroll relative h-full overflow-y-auto">
+    <div class="scrollbar-do relative h-full overflow-y-auto">
       <SiteHeader />
       <slot />
       <SiteFooter />
@@ -30,30 +30,3 @@ const seo = Astro.props.seo ?? {};
     </div>
   </body>
 </html>
-
-<style is:global>
-  .page-scroll {
-    --scrollbar-size: 6px;
-  }
-
-  @media screen and (min-width: 1024px) {
-    .page-scroll {
-      --scrollbar-size: 8px;
-    }
-  }
-
-  .page-scroll::-webkit-scrollbar {
-    width: var(--scrollbar-size);
-    height: var(--scrollbar-size);
-    border-left: 1px solid black;
-  }
-
-  .page-scroll::-webkit-scrollbar-thumb {
-    background-color: hsl(0, 100%, 50%, 0.4);
-    border-left: 1px solid black;
-  }
-
-  .page-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(0, 100%, 50%, 0.8);
-  }
-</style>  
